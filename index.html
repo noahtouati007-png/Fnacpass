@@ -3,887 +3,690 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FnacPass — Store Live</title>
+<title>FnacPass 360°</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --yellow: #F5A623;
-  --black: #1A1A1A;
-  --green: #2ECC71;
-  --red: #E74C3C;
-  --blue: #3498DB;
-  --orange: #E67E22;
-  --card: #242424;
-  --border: rgba(245,166,35,0.12);
-  --dark: #111111;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: var(--dark);
-  color: #fff;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background-image: radial-gradient(ellipse at 50% 0%, rgba(245,166,35,0.06) 0%, transparent 60%);
-}
+:root{--y:#F5A623;--b:#1A1A1A;--g:#2ECC71;--r:#E74C3C;--bl:#3498DB;--or:#E67E22;--card:#242424;--brd:rgba(245,166,35,.12);--dark:#111}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Montserrat',sans-serif;background:var(--dark);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background-image:radial-gradient(ellipse at 50% 0%,rgba(245,166,35,.06) 0%,transparent 60%)}
+.phone{width:390px;min-height:844px;background:var(--b);border-radius:50px;border:2px solid rgba(245,166,35,.25);overflow:hidden;position:relative;box-shadow:0 0 0 8px rgba(0,0,0,.5),0 40px 80px rgba(0,0,0,.8)}
+.notch{width:120px;height:30px;background:var(--b);border-radius:0 0 20px 20px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:100;border:2px solid rgba(245,166,35,.15);border-top:none}
+.sbar{display:flex;justify-content:space-between;padding:12px 28px 6px;font-size:11px;font-weight:600;color:rgba(255,255,255,.6);font-family:'Space Mono',monospace}
+.screen{display:none;flex-direction:column;height:calc(844px - 46px);overflow-y:auto;scrollbar-width:none;padding-bottom:80px}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{display:flex}
 
-.phone {
-  width: 390px;
-  min-height: 844px;
-  background: var(--black);
-  border-radius: 50px;
-  border: 2px solid rgba(245,166,35,0.25);
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 0 0 8px rgba(0,0,0,0.5), 0 40px 80px rgba(0,0,0,0.8);
-}
+/* ── NAV ── */
+.bnav{display:flex;justify-content:space-around;align-items:center;padding:10px 16px 22px;background:var(--card);border-top:1px solid var(--brd);position:absolute;bottom:0;left:0;right:0;z-index:50}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:.4;transition:all .2s;background:none;border:none;color:inherit}
+.ni.active{opacity:1}
+.ni-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);font-size:18px;transition:all .2s}
+.ni.active .ni-icon{background:var(--y)}
+.ni-lbl{font-size:9px;font-weight:600;color:rgba(255,255,255,.5)}
+.ni.active .ni-lbl{color:var(--y)}
 
-.notch {
-  width: 120px; height: 30px;
-  background: var(--black);
-  border-radius: 0 0 20px 20px;
-  margin: 0 auto;
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  z-index: 100;
-  border: 2px solid rgba(245,166,35,0.15);
-  border-top: none;
-}
+/* ── TOAST ── */
+.toast{position:absolute;bottom:88px;left:20px;right:20px;background:var(--y);color:var(--b);border-radius:12px;padding:12px 16px;font-size:12px;font-weight:700;z-index:500;transform:translateY(20px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
 
-.status-bar {
-  display: flex; justify-content: space-between;
-  padding: 12px 28px 6px;
-  font-size: 11px; font-weight: 600;
-  color: rgba(255,255,255,0.6);
-  font-family: 'Space Mono', monospace;
-}
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;background:var(--b);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;transition:opacity .5s,transform .5s}
+#splash.hide{opacity:0;transform:scale(1.05);pointer-events:none}
+.slogo{font-size:52px;font-weight:900;color:var(--y);letter-spacing:-2px}
+.slogo span{color:#fff}
+.ssub{font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:6px}
+.sbar2{width:200px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:32px;overflow:hidden}
+.sbar2-fill{height:100%;background:var(--y);border-radius:2px;animation:load 2s ease forwards}
+@keyframes load{from{width:0}to{width:100%}}
 
-.screen {
-  display: flex; flex-direction: column;
-  height: calc(844px - 46px);
-  overflow-y: auto; scrollbar-width: none;
-  padding-bottom: 80px;
-}
-.screen::-webkit-scrollbar { display: none; }
+/* ── UTILS ── */
+.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:8px}
+.card{background:var(--card);border-radius:18px;border:1px solid var(--brd)}
+.badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px}
+.bg{badge:badge;background:rgba(46,204,113,.15);color:var(--g)}
+.bo{badge;background:rgba(230,126,34,.15);color:var(--or)}
+.br{badge;background:rgba(231,76,60,.15);color:var(--r)}
+.tag{display:inline-block;font-size:9px;font-weight:500;padding:2px 7px;border-radius:8px;background:rgba(245,166,35,.12);color:var(--y)}
+.chip{flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;border:1px solid var(--brd);background:var(--card);color:rgba(255,255,255,.6)}
+.chip.active{background:var(--y);color:var(--b);border-color:var(--y)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(46,204,113,.4)}50%{opacity:.8;transform:scale(1.2);box-shadow:0 0 0 6px rgba(46,204,113,0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-/* HEADER */
-.store-header {
-  padding: 14px 20px 16px;
-  background: linear-gradient(180deg, rgba(245,166,35,0.06) 0%, transparent 100%);
-}
-.back-row {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
-}
-.back-btn {
-  width: 34px; height: 34px; border-radius: 10px;
-  background: var(--card); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; cursor: pointer; color: #fff;
-}
-.header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-.header-title span { color: var(--yellow); }
-.header-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+/* ═══════════════════════════════════
+   HOME
+═══════════════════════════════════ */
+.home-hdr{padding:50px 20px 16px;background:linear-gradient(180deg,rgba(245,166,35,.06) 0%,transparent 100%)}
+.greeting{font-size:13px;color:rgba(255,255,255,.5);font-weight:500}
+.hname{font-size:26px;font-weight:800}
+.hname span{color:var(--y)}
+.pass-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);border-radius:20px;padding:4px 12px;margin-top:8px;font-size:11px;font-weight:700;color:var(--y);text-transform:uppercase;letter-spacing:.08em}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 2s infinite}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:16px 20px}
+.stat-card{background:var(--card);border-radius:16px;padding:14px 12px;border:1px solid var(--brd);text-align:center}
+.stat-num{font-size:22px;font-weight:900;color:var(--y)}
+.stat-lbl{font-size:10px;color:rgba(255,255,255,.4);font-weight:600;margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
+.alert-banner{margin:0 20px 16px;background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.al-icon{font-size:22px;flex-shrink:0}
+.al-title{font-weight:700;color:var(--r);font-size:13px;margin-bottom:3px}
+.al-txt{font-size:12px;color:rgba(255,255,255,.8);line-height:1.5}
+.sec-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;padding:0 20px 12px}
+.prod-list{padding:0 20px;display:flex;flex-direction:column;gap:12px}
+.prod-card{background:var(--card);border-radius:20px;border:1px solid var(--brd);padding:16px;display:flex;gap:14px;align-items:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.prod-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--y)}
+.prod-card.grn::before{background:var(--g)}
+.prod-card.red::before{background:var(--r)}
+.prod-card:hover{transform:translateX(4px);border-color:rgba(245,166,35,.4)}
+.prod-icon{width:52px;height:52px;border-radius:14px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.prod-info{flex:1;min-width:0}
+.prod-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod-meta{font-size:11px;color:rgba(255,255,255,.4);margin-top:3px}
+.prod-status{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-top:5px}
+.s-ok{background:rgba(46,204,113,.15);color:var(--g)}
+.s-warn{background:rgba(245,166,35,.15);color:var(--y)}
+.s-bad{background:rgba(231,76,60,.15);color:var(--r)}
+.arr{font-size:18px;color:rgba(255,255,255,.2)}
 
-/* STORE SELECTOR */
-.store-selector {
-  padding: 0 20px 14px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.selector-label {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.1em; color: rgba(255,255,255,0.35);
-}
-.store-scroll {
-  display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px;
-}
-.store-scroll::-webkit-scrollbar { display: none; }
-.store-chip {
-  flex-shrink: 0; padding: 8px 14px;
-  border-radius: 20px; font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: all 0.2s; white-space: nowrap;
-  border: 1px solid var(--border);
-  background: var(--card); color: rgba(255,255,255,0.6);
-}
-.store-chip.active {
-  background: var(--yellow); color: var(--black); border-color: var(--yellow);
-}
-.store-chip:hover:not(.active) { border-color: rgba(245,166,35,0.3); }
+/* ═══════════════════════════════════
+   SCANNER
+═══════════════════════════════════ */
+.scan-wrap{align-items:center;padding:50px 20px 100px}
+.scan-title{font-size:24px;font-weight:900;text-align:center;margin-bottom:6px}
+.scan-sub{font-size:13px;color:rgba(255,255,255,.4);text-align:center;margin-bottom:32px}
+.scan-frame{width:260px;height:260px;border-radius:24px;background:var(--card);border:2px solid var(--y);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--y),transparent);animation:scan 2s ease-in-out infinite}
+@keyframes scan{0%{top:10%}50%{top:85%}100%{top:10%}}
+.scan-corners::before,.scan-corners::after{content:'';position:absolute;width:30px;height:30px;border-color:var(--y);border-style:solid}
+.scan-corners::before{top:8px;left:8px;border-width:3px 0 0 3px;border-radius:4px 0 0}
+.scan-corners::after{bottom:8px;right:8px;border-width:0 3px 3px 0;border-radius:0 0 4px}
+.scan-icon{font-size:64px;opacity:.15}
+.scan-btn{width:100%;padding:16px;border-radius:16px;background:var(--y);color:var(--b);border:none;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;margin-top:20px;transition:all .2s}
+.scan-btn:hover{background:#e09520;transform:translateY(-1px)}
+.recent-item{display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--card);border-radius:14px;margin-bottom:8px;border:1px solid var(--brd);cursor:pointer;transition:all .2s}
+.recent-item:hover{border-color:rgba(245,166,35,.4)}
+.scan-time{font-size:10px;color:rgba(255,255,255,.3);font-family:'Space Mono',monospace;margin-left:auto}
+.scan-name{font-size:13px;font-weight:600}
+.scan-res{font-size:11px;color:var(--g)}
 
-/* LIVE BANNER */
-.live-banner {
-  margin: 0 20px 14px;
-  background: var(--card);
-  border-radius: 16px; border: 1px solid var(--border);
-  padding: 14px 16px;
-  display: flex; gap: 12px; align-items: center;
-}
-.live-dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--green); flex-shrink: 0;
-  animation: livepulse 1.5s infinite;
-}
-@keyframes livepulse {
-  0%,100% { opacity:1; transform:scale(1); box-shadow: 0 0 0 0 rgba(46,204,113,0.4); }
-  50% { opacity:0.8; transform:scale(1.2); box-shadow: 0 0 0 6px rgba(46,204,113,0); }
-}
-.live-text { font-size: 12px; color: rgba(255,255,255,0.7); flex: 1; }
-.live-title { font-weight: 700; color: #fff; font-size: 13px; margin-bottom: 2px; }
-.live-time {
-  font-size: 10px; font-family: 'Space Mono', monospace;
-  color: var(--yellow); font-weight: 700;
-}
+/* ═══════════════════════════════════
+   SAV
+═══════════════════════════════════ */
+.sav-hdr{padding:50px 20px 20px}
+.sav-step{display:flex;gap:16px;margin-bottom:20px;position:relative}
+.sav-step::after{content:'';position:absolute;left:21px;top:44px;width:2px;height:calc(100% - 10px);background:rgba(245,166,35,.15)}
+.sav-step:last-child::after{display:none}
+.step-num{width:44px;height:44px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);color:var(--y);z-index:1}
+.step-num.done{background:var(--g);color:#fff;border-color:var(--g)}
+.step-content{flex:1;padding-top:8px}
+.step-t{font-size:14px;font-weight:700}
+.step-d{font-size:12px;color:rgba(255,255,255,.4);margin-top:4px;line-height:1.5}
+.form-lbl{font-size:12px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;display:block}
+.fsel,.ftxt{width:100%;padding:14px 16px;background:var(--card);border:1px solid var(--brd);border-radius:14px;color:#fff;font-family:'Montserrat',sans-serif;font-size:13px;outline:none;transition:border-color .2s;appearance:none}
+.fsel:focus,.ftxt:focus{border-color:rgba(245,166,35,.5)}
+.ftxt{resize:none;height:90px}
+.sub-btn{width:100%;padding:16px;border-radius:16px;background:var(--y);color:var(--b);border:none;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;margin-top:8px;transition:all .2s}
 
-/* SECTION TITLE */
-.sec { padding: 0 20px 10px; }
-.sec-label {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-bottom: 8px;
-}
+/* ═══════════════════════════════════
+   LOOP
+═══════════════════════════════════ */
+.loop-hdr{padding:50px 20px 20px;background:linear-gradient(180deg,rgba(46,204,113,.06) 0%,transparent 100%)}
+.co2-card{margin:0 20px 20px;background:linear-gradient(135deg,rgba(46,204,113,.12),rgba(46,204,113,.04));border:1px solid rgba(46,204,113,.25);border-radius:20px;padding:20px}
+.co2-score{font-size:36px;font-weight:900;color:var(--g);line-height:1}
+.co2-bar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin:8px 0 4px}
+.co2-fill{height:100%;background:var(--g);border-radius:3px;width:73%}
+.loop-act{background:var(--card);border-radius:20px;border:1px solid var(--brd);padding:18px;display:flex;gap:16px;align-items:center;cursor:pointer;transition:all .2s;margin-bottom:10px}
+.loop-act:hover{border-color:rgba(245,166,35,.3);transform:translateX(4px)}
+.act-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.ai-rep{background:rgba(245,166,35,.12)}
+.ai-sel{background:rgba(46,204,113,.12)}
+.ai-rec{background:rgba(52,152,219,.12)}
+.act-t{font-size:15px;font-weight:700}
+.act-d{font-size:12px;color:rgba(255,255,255,.4);margin-top:3px}
+.abadge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;flex-shrink:0}
+.ay{background:rgba(245,166,35,.15);color:var(--y)}
+.ag{background:rgba(46,204,113,.15);color:var(--g)}
+.ab{background:rgba(52,152,219,.15);color:var(--bl)}
+.pts-banner{margin:16px 20px 0;background:var(--y);border-radius:16px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.pts-t{font-size:13px;font-weight:700;color:var(--b)}
+.pts-n{font-size:26px;font-weight:900;color:var(--b);font-family:'Space Mono',monospace}
 
-/* AFFLUENCE CARD */
-.affluence-card {
-  margin: 0 20px 12px;
-  background: var(--card); border-radius: 18px;
-  border: 1px solid var(--border); overflow: hidden;
-}
-.aff-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 16px 10px;
-}
-.aff-title { font-size: 13px; font-weight: 700; }
-.aff-badge {
-  font-size: 10px; font-weight: 700; padding: 3px 10px;
-  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.06em;
-}
-.badge-green { background: rgba(46,204,113,0.15); color: var(--green); }
-.badge-orange { background: rgba(230,126,34,0.15); color: var(--orange); }
-.badge-red { background: rgba(231,76,60,0.15); color: var(--red); }
+/* ═══════════════════════════════════
+   STORE LIVE
+═══════════════════════════════════ */
+.store-hdr{padding:50px 20px 14px;background:linear-gradient(180deg,rgba(245,166,35,.06) 0%,transparent 100%)}
+.store-title{font-size:22px;font-weight:800}
+.store-title span{color:var(--y)}
+.live-banner{margin:0 20px 14px;background:var(--card);border-radius:16px;border:1px solid var(--brd);padding:14px 16px;display:flex;gap:12px;align-items:center}
+.ldot2{width:10px;height:10px;border-radius:50%;background:var(--g);flex-shrink:0;animation:pulse 1.5s infinite}
+.live-t{font-size:13px;font-weight:700}
+.live-sub{font-size:11px;color:rgba(255,255,255,.5)}
+.ltime{font-size:10px;font-family:'Space Mono',monospace;color:var(--y);font-weight:700}
+.crowd-card{margin:0 20px 12px;background:var(--card);border-radius:18px;border:1px solid var(--brd)}
+.crowd-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 10px}
+.crowd-bars-wrap{padding:4px 16px 0;display:flex;gap:3px;align-items:flex-end}
+.cbar{flex:1;border-radius:3px 3px 0 0;transition:height .5s}
+.cbar.act{background:var(--y)}
+.cbar.inact{background:rgba(255,255,255,.08)}
+.cbar-labels{display:flex;justify-content:space-between;padding:3px 16px 10px;font-size:9px;color:rgba(255,255,255,.3);font-family:'Space Mono',monospace}
+.crowd-stats{padding:10px 16px;border-top:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
+.cstat{text-align:center}
+.cnum{font-size:20px;font-weight:900;color:var(--y);font-family:'Space Mono',monospace}
+.clbl{font-size:9px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.vdiv{width:1px;height:32px;background:rgba(255,255,255,.06)}
+.wait-grid{margin:0 20px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.wait-card{background:var(--card);border-radius:16px;border:1px solid var(--brd);padding:14px}
+.wait-icon{font-size:20px;margin-bottom:8px}
+.wait-title{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px;font-weight:600}
+.wtime{font-size:22px;font-weight:900;font-family:'Space Mono',monospace;line-height:1}
+.wt-g{color:var(--g)}.wt-o{color:var(--or)}.wt-r{color:var(--r)}
+.wait-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:3px}
+.wbar{height:3px;border-radius:2px;margin-top:8px;background:rgba(255,255,255,.06)}
+.wfill{height:100%;border-radius:2px}
+.hmap-card{margin:0 20px 12px;background:var(--card);border-radius:18px;border:1px solid var(--brd);padding:14px 16px}
+.hmap-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+.hmap-cell{height:18px;border-radius:3px}
+.hmap-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:9px;color:rgba(255,255,255,.25);font-family:'Space Mono',monospace}
+.hmap-legend{display:flex;align-items:center;gap:6px;margin-top:8px;justify-content:flex-end}
+.hml{font-size:9px;color:rgba(255,255,255,.3)}
+.hml-dots{display:flex;gap:3px}
+.hml-dot{width:14px;height:14px;border-radius:2px}
+.vend-card{margin:0 20px 12px;background:var(--card);border-radius:18px;border:1px solid var(--brd)}
+.vend-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 10px}
+.vend-t{font-size:13px;font-weight:700}
+.vend-count{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(46,204,113,.12);color:var(--g)}
+.vrow{display:flex;gap:10px;align-items:center;padding:10px 16px;border-top:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .15s}
+.vrow:hover{background:rgba(255,255,255,.02)}
+.vav{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.vname{font-size:13px;font-weight:600}
+.vrayon{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.vstatus{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.sdot-row{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sd-g{background:var(--g)}.sd-o{background:var(--or);animation:blink 1.5s infinite}.sd-r{background:var(--r)}
+.wtag{font-size:9px;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);font-family:'Space Mono',monospace}
+.stock-card{margin:0 20px 12px;background:var(--card);border-radius:18px;border:1px solid var(--brd)}
+.stock-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 10px}
+.stock-search{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,.04);margin:0 16px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.06)}
+.stock-search input{background:none;border:none;color:#fff;font-size:12px;font-family:'Montserrat',sans-serif;width:100%;outline:none}
+.stock-search input::placeholder{color:rgba(255,255,255,.3)}
+.sitem{display:flex;gap:10px;align-items:center;padding:10px 16px;border-top:1px solid rgba(255,255,255,.04);cursor:pointer}
+.sitem:hover{background:rgba(255,255,255,.02)}
+.sicon{width:36px;height:36px;border-radius:10px;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sname{font-size:12px;font-weight:600}
+.sref{font-size:10px;color:rgba(255,255,255,.3);font-family:'Space Mono',monospace;margin-top:1px}
+.sqty{text-align:right}
+.snum{font-size:16px;font-weight:800;font-family:'Space Mono',monospace}
+.sn-g{color:var(--g)}.sn-o{color:var(--or)}.sn-r{color:var(--r)}
+.slbl{font-size:9px;color:rgba(255,255,255,.3);margin-top:1px;text-align:right}
+.srv-grid{margin:0 20px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.srv-card{background:var(--card);border-radius:16px;border:1px solid var(--brd);padding:14px;cursor:pointer;transition:all .2s}
+.srv-card:hover{border-color:rgba(245,166,35,.3);transform:translateY(-1px)}
+.srv-icon{font-size:22px;margin-bottom:8px}
+.srv-name{font-size:12px;font-weight:700;margin-bottom:2px}
+.srv-info{font-size:10px;color:rgba(255,255,255,.4);line-height:1.4}
+.srv-srow{display:flex;align-items:center;gap:4px;margin-top:6px}
+.srv-s{font-size:10px;font-weight:600}
+.ref-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 20px 12px;padding:12px;border-radius:14px;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);cursor:pointer;font-size:12px;font-weight:700;color:var(--y);transition:all .2s}
+.ref-btn:hover{background:rgba(245,166,35,.15)}
 
-.crowd-visual {
-  padding: 4px 16px 14px;
-  display: flex; gap: 3px; align-items: flex-end;
-}
-.crowd-bar {
-  flex: 1; border-radius: 3px 3px 0 0;
-  transition: height 0.5s ease;
-  position: relative;
-}
-.crowd-bar.active { background: var(--yellow); }
-.crowd-bar.inactive { background: rgba(255,255,255,0.08); }
-.crowd-labels {
-  display: flex; justify-content: space-between;
-  padding: 0 16px 10px;
-  font-size: 9px; color: rgba(255,255,255,0.3);
-  font-family: 'Space Mono', monospace;
-}
-.crowd-now {
-  padding: 10px 16px;
-  border-top: 1px solid var(--border);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.crowd-stat { text-align: center; }
-.crowd-num { font-size: 20px; font-weight: 900; color: var(--yellow); font-family: 'Space Mono', monospace; }
-.crowd-lbl { font-size: 9px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+/* ═══════════════════════════════════
+   PROFIL
+═══════════════════════════════════ */
+.prof-hdr{padding:50px 20px 20px;display:flex;gap:16px;align-items:center}
+.avatar{width:72px;height:72px;border-radius:22px;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:var(--b);flex-shrink:0}
+.pname{font-size:20px;font-weight:800}
+.pemail{font-size:12px;color:rgba(255,255,255,.4);margin-top:3px}
+.ptier{display:inline-flex;align-items:center;gap:5px;background:var(--y);color:var(--b);border-radius:10px;padding:3px 10px;font-size:11px;font-weight:800;margin-top:6px;text-transform:uppercase;letter-spacing:.06em}
+.psec{padding:0 20px;margin-bottom:20px}
+.psec-t{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-bottom:10px}
+.pitem{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--card);border-radius:14px;margin-bottom:6px;border:1px solid var(--brd);cursor:pointer;transition:all .2s}
+.pitem:hover{border-color:rgba(245,166,35,.3)}
+.pil{display:flex;gap:12px;align-items:center}
+.piicon{font-size:18px;width:36px;text-align:center}
+.pilbl{font-size:14px;font-weight:600}
+.pival{font-size:12px;color:rgba(255,255,255,.4)}
+.piarr{color:rgba(255,255,255,.2);font-size:14px}
 
-/* WAIT TIME */
-.wait-grid {
-  margin: 0 20px 12px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-}
-.wait-card {
-  background: var(--card); border-radius: 16px;
-  border: 1px solid var(--border); padding: 14px;
-}
-.wait-icon { font-size: 20px; margin-bottom: 8px; }
-.wait-title { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 4px; font-weight: 600; }
-.wait-time {
-  font-size: 22px; font-weight: 900; font-family: 'Space Mono', monospace;
-  line-height: 1;
-}
-.wait-time.green { color: var(--green); }
-.wait-time.orange { color: var(--orange); }
-.wait-time.red { color: var(--red); }
-.wait-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 3px; }
-.wait-bar { height: 3px; border-radius: 2px; margin-top: 8px; background: rgba(255,255,255,0.06); }
-.wait-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
-
-/* VENDEURS */
-.vendeurs-card {
-  margin: 0 20px 12px;
-  background: var(--card); border-radius: 18px;
-  border: 1px solid var(--border);
-}
-.vendeurs-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 16px 10px;
-}
-.vendeurs-title { font-size: 13px; font-weight: 700; }
-.vendeurs-count {
-  font-size: 11px; font-weight: 700; padding: 3px 10px;
-  border-radius: 10px; background: rgba(46,204,113,0.12); color: var(--green);
-}
-.vendeur-row {
-  display: flex; gap: 10px; align-items: center;
-  padding: 10px 16px;
-  border-top: 1px solid rgba(255,255,255,0.04);
-  cursor: pointer; transition: background 0.15s;
-}
-.vendeur-row:hover { background: rgba(255,255,255,0.02); }
-.vendeur-avatar {
-  width: 36px; height: 36px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 800; flex-shrink: 0;
-}
-.vendeur-info { flex: 1; }
-.vendeur-name { font-size: 13px; font-weight: 600; }
-.vendeur-rayon { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-.vendeur-status {
-  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
-}
-.status-dot-row {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 11px; font-weight: 600;
-}
-.sdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.sdot-green { background: var(--green); }
-.sdot-orange { background: var(--orange); animation: blink 1.5s infinite; }
-.sdot-red { background: var(--red); }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
-.wait-tag {
-  font-size: 9px; padding: 2px 6px; border-radius: 6px;
-  background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4);
-  font-family: 'Space Mono', monospace;
-}
-
-/* STOCK PAR RAYON */
-.stock-card {
-  margin: 0 20px 12px;
-  background: var(--card); border-radius: 18px;
-  border: 1px solid var(--border);
-}
-.stock-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 16px 10px;
-}
-.stock-title { font-size: 13px; font-weight: 700; }
-.stock-search {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 16px;
-  background: rgba(255,255,255,0.04);
-  margin: 0 16px 10px;
-  border-radius: 10px; border: 1px solid rgba(255,255,255,0.06);
-}
-.stock-search input {
-  background: none; border: none; color: #fff; font-size: 12px;
-  font-family: 'Montserrat', sans-serif; width: 100%; outline: none;
-}
-.stock-search input::placeholder { color: rgba(255,255,255,0.3); }
-.stock-item {
-  display: flex; gap: 10px; align-items: center;
-  padding: 10px 16px;
-  border-top: 1px solid rgba(255,255,255,0.04);
-}
-.stock-icon {
-  width: 36px; height: 36px; border-radius: 10px;
-  background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.12);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; flex-shrink: 0;
-}
-.stock-info { flex: 1; }
-.stock-name { font-size: 12px; font-weight: 600; }
-.stock-ref { font-size: 10px; color: rgba(255,255,255,0.3); font-family: 'Space Mono', monospace; margin-top: 1px; }
-.stock-qty { text-align: right; }
-.stock-num { font-size: 16px; font-weight: 800; font-family: 'Space Mono', monospace; }
-.stock-num.plenty { color: var(--green); }
-.stock-num.low { color: var(--orange); }
-.stock-num.none { color: var(--red); }
-.stock-label { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 1px; text-align: right; }
-
-/* HEATMAP */
-.heatmap-card {
-  margin: 0 20px 12px;
-  background: var(--card); border-radius: 18px;
-  border: 1px solid var(--border); padding: 14px 16px;
-}
-.heatmap-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
-.heatmap-grid {
-  display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px;
-}
-.hmap-cell {
-  height: 18px; border-radius: 3px;
-  transition: all 0.3s;
-}
-.hmap-labels {
-  display: flex; justify-content: space-between;
-  margin-top: 6px;
-  font-size: 9px; color: rgba(255,255,255,0.25);
-  font-family: 'Space Mono', monospace;
-}
-.hmap-legend {
-  display: flex; align-items: center; gap: 6px;
-  margin-top: 8px; justify-content: flex-end;
-}
-.hmap-leg-label { font-size: 9px; color: rgba(255,255,255,0.3); }
-.hmap-leg-dots { display: flex; gap: 3px; }
-.hmap-leg-dot { width: 14px; height: 14px; border-radius: 2px; }
-
-/* SERVICES */
-.services-grid {
-  margin: 0 20px 12px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-}
-.service-card {
-  background: var(--card); border-radius: 16px;
-  border: 1px solid var(--border); padding: 14px;
-  cursor: pointer; transition: all 0.2s;
-}
-.service-card:hover { border-color: rgba(245,166,35,0.3); transform: translateY(-1px); }
-.service-icon { font-size: 22px; margin-bottom: 8px; }
-.service-name { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
-.service-info { font-size: 10px; color: rgba(255,255,255,0.4); line-height: 1.4; }
-.service-status-row {
-  display: flex; align-items: center; gap: 4px; margin-top: 6px;
-}
-.service-status { font-size: 10px; font-weight: 600; }
-
-/* BOTTOM NAV */
-.bottom-nav {
-  display: flex; justify-content: space-around; align-items: center;
-  padding: 10px 20px 22px;
-  background: var(--card);
-  border-top: 1px solid var(--border);
-  position: absolute; bottom: 0; left: 0; right: 0;
-  z-index: 50;
-}
-.nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  cursor: pointer; opacity: 0.4; transition: all 0.2s;
-  background: none; border: none; color: inherit;
-}
-.nav-item.active { opacity: 1; }
-.nav-icon {
-  width: 42px; height: 42px; border-radius: 13px;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.05); font-size: 18px; transition: all 0.2s;
-}
-.nav-item.active .nav-icon { background: var(--yellow); }
-.nav-label { font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.5); }
-.nav-item.active .nav-label { color: var(--yellow); }
-
-/* TOAST */
-.toast {
-  position: absolute; bottom: 88px; left: 20px; right: 20px;
-  background: var(--yellow); color: var(--black);
-  border-radius: 12px; padding: 12px 16px;
-  font-size: 12px; font-weight: 700; z-index: 500;
-  transform: translateY(20px); opacity: 0;
-  transition: all 0.3s;
-}
-.toast.show { transform: translateY(0); opacity: 1; }
-
-/* REFRESH BTN */
-.refresh-btn {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  margin: 0 20px 12px;
-  padding: 12px; border-radius: 14px;
-  background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.2);
-  cursor: pointer; font-size: 12px; font-weight: 700; color: var(--yellow);
-  transition: all 0.2s;
-}
-.refresh-btn:hover { background: rgba(245,166,35,0.15); }
-.refresh-icon { font-size: 14px; }
+/* ═══════════════════════════════════
+   MODAL PRODUIT
+═══════════════════════════════════ */
+.modal{position:absolute;inset:0;background:var(--b);z-index:200;display:none;flex-direction:column;animation:slideUp .3s ease}
+.modal.open{display:flex}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-hdr{display:flex;align-items:center;gap:16px;padding:50px 20px 16px}
+.back-btn{width:40px;height:40px;border-radius:12px;background:var(--card);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+.modal-title{font-size:20px;font-weight:800}
+.modal-body{flex:1;overflow-y:auto;padding:0 20px 100px;scrollbar-width:none}
+.modal-body::-webkit-scrollbar{display:none}
+.prod-hero{background:var(--card);border-radius:24px;padding:28px;display:flex;flex-direction:column;align-items:center;margin-bottom:20px;border:1px solid var(--brd)}
+.hero-icon{font-size:72px;margin-bottom:16px}
+.hero-name{font-size:20px;font-weight:800;text-align:center}
+.hero-meta{font-size:12px;color:rgba(255,255,255,.4);margin-top:4px}
+.qr-block{background:#fff;border-radius:16px;padding:16px;display:flex;flex-direction:column;align-items:center;margin:16px 0}
+.qr-code{width:120px;height:120px;background:var(--b);border-radius:8px;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px}
+.qr-cell{border-radius:1px}
+.qr-on{background:var(--b)}.qr-off{background:transparent}
+.qr-lbl{font-size:10px;color:var(--b);font-weight:700;margin-top:8px;font-family:'Space Mono',monospace}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.info-cell{background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--brd)}
+.ic-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);margin-bottom:4px}
+.ic-val{font-size:14px;font-weight:700}
+.ic-y{color:var(--y)}.ic-g{color:var(--g)}.ic-r{color:var(--r)}
+.hist-item{display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--card);border-radius:14px;border:1px solid var(--brd);margin-bottom:8px}
+.hdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.hd-y{background:var(--y)}.hd-g{background:var(--g)}.hd-gr{background:rgba(255,255,255,.3)}
+.hdate{font-size:10px;color:rgba(255,255,255,.3);font-family:'Space Mono',monospace}
+.hevent{font-size:13px;font-weight:600}
+.act-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.abtn{padding:14px;border-radius:16px;border:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .2s}
+.abtn-icon{font-size:24px}
+.abtn:hover{transform:translateY(-2px)}
+.abtn:active{transform:scale(.97)}
+.abtn-p{background:var(--y);color:var(--b)}
+.abtn-s{background:var(--card);color:#fff;border:1px solid var(--brd)}
+.abtn-d{background:rgba(231,76,60,.12);color:var(--r);border:1px solid rgba(231,76,60,.25)}
+.abtn-g{background:rgba(46,204,113,.12);color:var(--g);border:1px solid rgba(46,204,113,.25)}
 </style>
 </head>
 <body>
 
+<!-- SPLASH -->
+<div id="splash">
+  <div class="slogo">fnac<span>pass</span></div>
+  <div class="ssub">Ton produit a une vie</div>
+  <div class="sbar2"><div class="sbar2-fill"></div></div>
+</div>
+
 <div class="phone">
   <div class="notch"></div>
-  <div class="status-bar">
-    <span>09:41</span>
-    <span>⚡ 87%</span>
+  <div class="sbar"><span id="clock">09:41</span><span>⚡ 87%</span></div>
+
+  <!-- ════ HOME ════ -->
+  <div class="screen active" id="s-home">
+    <div class="home-hdr">
+      <div class="greeting">Bonjour 👋</div>
+      <div class="hname">Maellys <span>Dupont</span></div>
+      <div class="pass-badge"><div class="ldot"></div>Fnac+ Max · 3 produits actifs</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">3</div><div class="stat-lbl">Produits</div></div>
+      <div class="stat-card"><div class="stat-num">142</div><div class="stat-lbl">Loop pts</div></div>
+      <div class="stat-card"><div class="stat-num">A+</div><div class="stat-lbl">Score CO₂</div></div>
+    </div>
+    <div class="alert-banner">
+      <div class="al-icon">⚠️</div>
+      <div><div class="al-title">Garantie bientôt expirée</div><div class="al-txt">iPhone 12 Pro — expire dans 18 jours. Pensez à la renouveler !</div></div>
+    </div>
+    <div class="sec-title">Mes Passports</div>
+    <div class="prod-list">
+      <div class="prod-card" onclick="openModal('m-iphone')">
+        <div class="prod-icon">📱</div>
+        <div class="prod-info"><div class="prod-name">iPhone 12 Pro</div><div class="prod-meta">Acheté le 15 mars 2022 · Fnac Montpellier</div><div class="prod-status s-warn">⚠ Garantie bientôt expirée</div></div>
+        <div class="arr">›</div>
+      </div>
+      <div class="prod-card grn" onclick="openModal('m-mac')">
+        <div class="prod-icon">💻</div>
+        <div class="prod-info"><div class="prod-name">MacBook Air M2</div><div class="prod-meta">Reconditionné · 08 jan. 2025 · Fnac.com</div><div class="prod-status s-ok">✓ Passport actif — Garantie 2 ans</div></div>
+        <div class="arr">›</div>
+      </div>
+      <div class="prod-card red" onclick="openModal('m-tv')">
+        <div class="prod-icon">📺</div>
+        <div class="prod-info"><div class="prod-name">TV Samsung 55" QLED</div><div class="prod-meta">Acheté le 02 déc. 2020 · Darty</div><div class="prod-status s-bad">✕ SAV en cours — Ticket #48291</div></div>
+        <div class="arr">›</div>
+      </div>
+    </div>
   </div>
 
-  <div class="screen">
-
-    <!-- HEADER -->
-    <div class="store-header">
-      <div class="back-row">
-        <div class="back-btn">‹</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;text-transform:uppercase;letter-spacing:.1em">FnacPass</div>
+  <!-- ════ SCANNER ════ -->
+  <div class="screen" id="s-scan">
+    <div class="scan-wrap">
+      <div class="scan-title">Scanner un QR</div>
+      <div class="scan-sub">Scanne le QR code de ton produit<br>pour accéder à son Passport</div>
+      <div class="scan-frame">
+        <div class="scan-line"></div>
+        <div class="scan-corners"></div>
+        <div class="scan-icon">⬛</div>
       </div>
-      <div class="header-title">Store <span>Live</span></div>
-      <div class="header-sub">Infos en temps réel — Fnac Montpellier</div>
-    </div>
-
-    <!-- STORE SELECTOR -->
-    <div class="store-selector">
-      <div class="selector-label">Choisir un magasin</div>
-      <div class="store-scroll">
-        <div class="store-chip active" onclick="selectStore(this, 'Montpellier')">📍 Montpellier</div>
-        <div class="store-chip" onclick="selectStore(this, 'Lattes')">Lattes</div>
-        <div class="store-chip" onclick="selectStore(this, 'Odysseum')">Odysseum</div>
-        <div class="store-chip" onclick="selectStore(this, 'Lyon Part-Dieu')">Lyon Part-Dieu</div>
-        <div class="store-chip" onclick="selectStore(this, 'Marseille')">Marseille</div>
-        <div class="store-chip" onclick="selectStore(this, 'Paris Châtelet')">Paris Châtelet</div>
+      <button class="scan-btn" onclick="simScan()">📷 Simuler un scan</button>
+      <div style="width:100%;margin-top:24px">
+        <div class="sec-lbl" style="margin-bottom:10px">Scans récents</div>
+        <div class="recent-item" onclick="openModal('m-iphone')"><span style="font-size:20px">📱</span><div><div class="scan-name">iPhone 12 Pro</div><div class="scan-res">✓ Passport activé</div></div><div class="scan-time">Hier 14:22</div></div>
+        <div class="recent-item" onclick="openModal('m-mac')"><span style="font-size:20px">💻</span><div><div class="scan-name">MacBook Air M2</div><div class="scan-res">✓ Garantie vérifiée</div></div><div class="scan-time">08/01 10:15</div></div>
       </div>
     </div>
+  </div>
 
-    <!-- LIVE BANNER -->
+  <!-- ════ SAV ════ -->
+  <div class="screen" id="s-sav">
+    <div class="sav-hdr"><div style="font-size:26px;font-weight:900">SAV Simplifié</div><div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px">Diagnostic rapide en 3 étapes</div></div>
+    <div style="padding:0 20px">
+      <div class="sav-step"><div class="step-num done">✓</div><div class="step-content"><div class="step-t">Identification produit</div><div class="step-d">TV Samsung 55" QLED — Ticket #48291<br>Scanné le 28/03/2026</div></div></div>
+      <div class="sav-step"><div class="step-num done">✓</div><div class="step-content"><div class="step-t">Diagnostic automatique</div><div class="step-d">Problème d'écran détecté — Panne matérielle probable. Historique Passport consulté.</div></div></div>
+      <div class="sav-step"><div class="step-num">3</div><div class="step-content"><div class="step-t">Prise en charge</div><div class="step-d">Complète le formulaire pour planifier la réparation.</div></div></div>
+    </div>
+    <div style="padding:0 20px">
+      <div style="margin-bottom:16px"><label class="form-lbl">Type de problème</label><select class="fsel"><option>Écran — Problème d'affichage</option><option>Son — Pas de son</option><option>Alimentation — Ne s'allume pas</option></select></div>
+      <div style="margin-bottom:16px"><label class="form-lbl">Magasin de dépôt</label><select class="fsel"><option>Fnac Montpellier — Place de la Comédie</option><option>Fnac Lattes — Grand Sud</option><option>Darty Montpellier Centre</option></select></div>
+      <div style="margin-bottom:16px"><label class="form-lbl">Description (optionnel)</label><textarea class="ftxt" placeholder="Décris le problème..."></textarea></div>
+      <button class="sub-btn" onclick="toast('✓ Demande SAV envoyée ! RDV confirmé par email.')">Soumettre la demande SAV</button>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- ════ LOOP ════ -->
+  <div class="screen" id="s-loop">
+    <div class="loop-hdr"><div style="font-size:26px;font-weight:900">Fnac <span style="color:var(--g)">Loop</span></div><div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px">Donne une seconde vie à tes produits</div></div>
+    <div class="co2-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4)">Impact CO₂ évité</div><div class="co2-score">147 <span style="font-size:14px;font-weight:600;color:rgba(255,255,255,.5)">kg CO₂</span></div></div>
+        <div style="font-size:36px">🌱</div>
+      </div>
+      <div class="co2-bar"><div class="co2-fill"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.3);font-family:'Space Mono',monospace"><span>0 kg</span><span>Objectif 200 kg</span></div>
+    </div>
+    <div class="sec-title">Que faire de ton iPhone 12 Pro ?</div>
+    <div style="padding:0 20px">
+      <div class="loop-act" onclick="toast('🔧 Réservation atelier confirmée !')"><div class="act-icon ai-rep">🔧</div><div style="flex:1"><div class="act-t">Réparer</div><div class="act-d">Batterie à 72% — 49€ en atelier Fnac.</div></div><div class="abadge ay">49€</div></div>
+      <div class="loop-act" onclick="toast('💰 Estimation reprise : 180€ de crédit Fnac !')"><div class="act-icon ai-sel">💰</div><div style="flex:1"><div class="act-t">Revendre à Fnac</div><div class="act-d">Reprise immédiate en magasin.</div></div><div class="abadge ag">~180€</div></div>
+      <div class="loop-act" onclick="toast('♻️ Bac de collecte disponible en magasin !')"><div class="act-icon ai-rec">♻️</div><div style="flex:1"><div class="act-t">Recycler</div><div class="act-d">Dépôt gratuit + 20 points Loop offerts.</div></div><div class="abadge ab">+20 pts</div></div>
+    </div>
+    <div class="pts-banner" style="margin-bottom:24px"><div><div class="pts-t">Tes points Loop</div><div style="font-size:11px;color:rgba(26,26,26,.6);font-weight:600">Depuis jan. 2024</div></div><div class="pts-n">142 pts</div></div>
+  </div>
+
+  <!-- ════ STORE LIVE ════ -->
+  <div class="screen" id="s-store">
+    <div class="store-hdr">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="font-size:10px;color:rgba(255,255,255,.3);font-weight:600;text-transform:uppercase;letter-spacing:.1em">FnacPass</div>
+      </div>
+      <div class="store-title">Store <span>Live</span></div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px">Infos temps réel · Fnac Montpellier</div>
+    </div>
+    <div style="padding:0 20px 14px">
+      <div class="sec-lbl">Choisir un magasin</div>
+      <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px">
+        <div class="chip active" onclick="selStore(this,'Montpellier')">📍 Montpellier</div>
+        <div class="chip" onclick="selStore(this,'Lattes')">Lattes</div>
+        <div class="chip" onclick="selStore(this,'Odysseum')">Odysseum</div>
+        <div class="chip" onclick="selStore(this,'Lyon')">Lyon</div>
+        <div class="chip" onclick="selStore(this,'Paris')">Paris Châtelet</div>
+      </div>
+    </div>
     <div class="live-banner">
-      <div class="live-dot"></div>
-      <div class="live-text">
-        <div class="live-title">Fnac Montpellier — Place de la Comédie</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.5)">Ouvert · Ferme à 20h00 · 580 m²</div>
-      </div>
-      <div class="live-time" id="livetime">09:41</div>
+      <div class="ldot2"></div>
+      <div style="flex:1"><div class="live-t">Fnac Montpellier — Place de la Comédie</div><div class="live-sub">Ouvert · Ferme à 20h00 · 580 m²</div></div>
+      <div class="ltime" id="ltime">09:41</div>
     </div>
-
-    <!-- AFFLUENCE -->
-    <div style="padding:0 20px 6px">
-      <div class="sec-label">Affluence actuelle</div>
-    </div>
-    <div class="affluence-card">
-      <div class="aff-header">
-        <div class="aff-title">Fréquentation magasin</div>
-        <div class="aff-badge badge-green" id="aff-badge">Peu de monde</div>
-      </div>
-      <div class="crowd-visual" id="crowd-bars"></div>
-      <div class="crowd-labels">
-        <span>9h</span><span>10h</span><span>11h</span><span>12h</span><span>13h</span><span>14h</span><span>15h</span><span>16h</span><span>17h</span><span>18h</span><span>19h</span><span>20h</span>
-      </div>
-      <div class="crowd-now">
-        <div class="crowd-stat">
-          <div class="crowd-num" id="crowd-count">87</div>
-          <div class="crowd-lbl">Personnes</div>
-        </div>
-        <div style="width:1px;height:32px;background:rgba(255,255,255,0.06)"></div>
-        <div class="crowd-stat">
-          <div class="crowd-num" style="color:var(--green)">26%</div>
-          <div class="crowd-lbl">Capacité</div>
-        </div>
-        <div style="width:1px;height:32px;background:rgba(255,255,255,0.06)"></div>
-        <div class="crowd-stat">
-          <div class="crowd-num" style="color:rgba(255,255,255,0.5);font-size:14px">↓18%</div>
-          <div class="crowd-lbl">vs hier</div>
-        </div>
+    <div style="padding:0 20px 6px"><div class="sec-lbl">Affluence actuelle</div></div>
+    <div class="crowd-card">
+      <div class="crowd-hdr"><div style="font-size:13px;font-weight:700">Fréquentation magasin</div><div class="badge bg">Peu de monde</div></div>
+      <div class="crowd-bars-wrap" id="cbars"></div>
+      <div class="cbar-labels"><span>9h</span><span>10h</span><span>11h</span><span>12h</span><span>13h</span><span>14h</span><span>15h</span><span>16h</span><span>17h</span><span>18h</span><span>19h</span><span>20h</span></div>
+      <div class="crowd-stats">
+        <div class="cstat"><div class="cnum" id="ccount">87</div><div class="clbl">Personnes</div></div>
+        <div class="vdiv"></div>
+        <div class="cstat"><div class="cnum" style="color:var(--g)">26%</div><div class="clbl">Capacité</div></div>
+        <div class="vdiv"></div>
+        <div class="cstat"><div class="cnum" style="color:rgba(255,255,255,.5);font-size:14px">↓18%</div><div class="clbl">vs hier</div></div>
       </div>
     </div>
-
-    <!-- ATTENTE -->
-    <div style="padding:0 20px 6px">
-      <div class="sec-label">Temps d'attente</div>
-    </div>
+    <div style="padding:0 20px 6px"><div class="sec-lbl">Temps d'attente</div></div>
     <div class="wait-grid">
-      <div class="wait-card">
-        <div class="wait-icon">🛒</div>
-        <div class="wait-title">Caisses</div>
-        <div class="wait-time green" id="caisse-time">3 min</div>
-        <div class="wait-sub">2 caisses ouvertes</div>
-        <div class="wait-bar"><div class="wait-fill" style="width:20%;background:var(--green)"></div></div>
-      </div>
-      <div class="wait-card">
-        <div class="wait-icon">🔧</div>
-        <div class="wait-title">SAV / Accueil</div>
-        <div class="wait-time orange" id="sav-time">12 min</div>
-        <div class="wait-sub">1 agent disponible</div>
-        <div class="wait-bar"><div class="wait-fill" style="width:55%;background:var(--orange)"></div></div>
-      </div>
-      <div class="wait-card">
-        <div class="wait-icon">🖥️</div>
-        <div class="wait-title">Retrait commande</div>
-        <div class="wait-time green" id="retrait-time">2 min</div>
-        <div class="wait-sub">Borne libre</div>
-        <div class="wait-bar"><div class="wait-fill" style="width:10%;background:var(--green)"></div></div>
-      </div>
-      <div class="wait-card">
-        <div class="wait-icon">🎯</div>
-        <div class="wait-title">Conseil Expert</div>
-        <div class="wait-time orange" id="conseil-time">8 min</div>
-        <div class="wait-sub">Sur rendez-vous</div>
-        <div class="wait-bar"><div class="wait-fill" style="width:40%;background:var(--orange)"></div></div>
-      </div>
+      <div class="wait-card"><div class="wait-icon">🛒</div><div class="wait-title">Caisses</div><div class="wtime wt-g" id="wt1">3 min</div><div class="wait-sub">2 caisses ouvertes</div><div class="wbar"><div class="wfill" style="width:20%;background:var(--g)"></div></div></div>
+      <div class="wait-card"><div class="wait-icon">🔧</div><div class="wait-title">SAV / Accueil</div><div class="wtime wt-o" id="wt2">12 min</div><div class="wait-sub">1 agent disponible</div><div class="wbar"><div class="wfill" style="width:55%;background:var(--or)"></div></div></div>
+      <div class="wait-card"><div class="wait-icon">🖥️</div><div class="wait-title">Retrait commande</div><div class="wtime wt-g" id="wt3">2 min</div><div class="wait-sub">Borne libre</div><div class="wbar"><div class="wfill" style="width:10%;background:var(--g)"></div></div></div>
+      <div class="wait-card"><div class="wait-icon">🎯</div><div class="wait-title">Conseil Expert</div><div class="wtime wt-o" id="wt4">8 min</div><div class="wait-sub">Sur rendez-vous</div><div class="wbar"><div class="wfill" style="width:40%;background:var(--or)"></div></div></div>
     </div>
-
-    <!-- HEATMAP HORAIRE -->
-    <div style="padding:0 20px 6px">
-      <div class="sec-label">Meilleurs moments pour visiter</div>
+    <div style="padding:0 20px 6px"><div class="sec-lbl">Meilleur moment pour visiter</div></div>
+    <div class="hmap-card">
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px">Affluence prévue aujourd'hui</div>
+      <div class="hmap-grid" id="hmap"></div>
+      <div class="hmap-labels"><span>9h</span><span>10h</span><span>11h</span><span>12h</span><span>13h</span><span>14h</span><span>15h</span><span>16h</span><span>17h</span><span>18h</span><span>19h</span><span>20h</span></div>
+      <div class="hmap-legend"><div class="hml">Calme</div><div class="hml-dots"><div class="hml-dot" style="background:rgba(46,204,113,.2)"></div><div class="hml-dot" style="background:rgba(245,166,35,.3)"></div><div class="hml-dot" style="background:rgba(245,166,35,.6)"></div><div class="hml-dot" style="background:rgba(231,76,60,.5)"></div><div class="hml-dot" style="background:rgba(231,76,60,.9)"></div></div><div class="hml">Chargé</div></div>
     </div>
-    <div class="heatmap-card">
-      <div class="heatmap-title">Affluence prévue aujourd'hui</div>
-      <div class="heatmap-grid" id="heatmap"></div>
-      <div class="hmap-labels">
-        <span>9h</span><span>10h</span><span>11h</span><span>12h</span><span>13h</span><span>14h</span><span>15h</span><span>16h</span><span>17h</span><span>18h</span><span>19h</span><span>20h</span>
-      </div>
-      <div class="hmap-legend">
-        <div class="hmap-leg-label">Calme</div>
-        <div class="hmap-leg-dots">
-          <div class="hmap-leg-dot" style="background:rgba(46,204,113,0.2)"></div>
-          <div class="hmap-leg-dot" style="background:rgba(245,166,35,0.3)"></div>
-          <div class="hmap-leg-dot" style="background:rgba(245,166,35,0.6)"></div>
-          <div class="hmap-leg-dot" style="background:rgba(231,76,60,0.5)"></div>
-          <div class="hmap-leg-dot" style="background:rgba(231,76,60,0.9)"></div>
-        </div>
-        <div class="hmap-leg-label">Chargé</div>
-      </div>
+    <div style="padding:0 20px 6px"><div class="sec-lbl">Vendeurs disponibles</div></div>
+    <div class="vend-card">
+      <div class="vend-hdr"><div class="vend-t">Équipe en magasin</div><div class="vend-count">6 présents</div></div>
+      <div class="vrow" onclick="toast('📲 Antoine vous attend en rayon Photo — arrivez dans 5 min !')"><div class="vav" style="background:rgba(52,152,219,.15);color:var(--bl)">A</div><div style="flex:1"><div class="vname">Antoine R.</div><div class="vrayon">📸 Photo · Vidéo · Audio</div></div><div class="vstatus"><div class="sdot-row"><div class="sdot sd-g"></div><span style="color:var(--g)">Disponible</span></div><div class="wtag">Passport ⭐</div></div></div>
+      <div class="vrow" onclick="toast('⏳ Sarah est avec un client — attente ~8 min')"><div class="vav" style="background:rgba(155,89,182,.15);color:#9B59B6">S</div><div style="flex:1"><div class="vname">Sarah M.</div><div class="vrayon">💻 Informatique · Tablettes</div></div><div class="vstatus"><div class="sdot-row"><div class="sdot sd-o"></div><span style="color:var(--or)">Avec client</span></div><div class="wtag">~8 min</div></div></div>
+      <div class="vrow" onclick="toast('📚 Marc est libre ! Livres & Culture — 2ème étage')"><div class="vav" style="background:rgba(46,204,113,.12);color:var(--g)">M</div><div style="flex:1"><div class="vname">Marc D.</div><div class="vrayon">📚 Livres · Vinyles · Culture</div></div><div class="vstatus"><div class="sdot-row"><div class="sdot sd-g"></div><span style="color:var(--g)">Disponible</span></div><div class="wtag">Passport ⭐</div></div></div>
+      <div class="vrow" onclick="toast('📺 Lucie en pause — retour dans 15 min')"><div class="vav" style="background:rgba(231,76,60,.12);color:var(--r)">L</div><div style="flex:1"><div class="vname">Lucie B.</div><div class="vrayon">📺 TV · Son · Électronique</div></div><div class="vstatus"><div class="sdot-row"><div class="sdot sd-r"></div><span style="color:rgba(255,255,255,.4)">En pause</span></div><div class="wtag">~15 min</div></div></div>
+      <div class="vrow" onclick="toast('🎮 Kevin disponible — Gaming 1er étage !')"><div class="vav" style="background:rgba(245,166,35,.12);color:var(--y)">K</div><div style="flex:1"><div class="vname">Kevin T.</div><div class="vrayon">🎮 Gaming · Jeux · Consoles</div></div><div class="vstatus"><div class="sdot-row"><div class="sdot sd-g"></div><span style="color:var(--g)">Disponible</span></div><div class="wtag">Passport ⭐</div></div></div>
     </div>
-
-    <!-- VENDEURS DISPONIBLES -->
-    <div style="padding:0 20px 6px">
-      <div class="sec-label">Vendeurs disponibles</div>
-    </div>
-    <div class="vendeurs-card">
-      <div class="vendeurs-header">
-        <div class="vendeurs-title">Équipe en magasin</div>
-        <div class="vendeurs-count">6 présents</div>
-      </div>
-      <div class="vendeur-row" onclick="showToast('📲 Antoine vous attend en rayon Photo — arrivez dans 5 min !')">
-        <div class="vendeur-avatar" style="background:rgba(52,152,219,0.15);color:var(--blue)">A</div>
-        <div class="vendeur-info">
-          <div class="vendeur-name">Antoine R.</div>
-          <div class="vendeur-rayon">📸 Photo · Vidéo · Audio</div>
-        </div>
-        <div class="vendeur-status">
-          <div class="status-dot-row">
-            <div class="sdot sdot-green"></div>
-            <span style="font-size:11px;font-weight:600;color:var(--green)">Disponible</span>
-          </div>
-          <div class="wait-tag">Passport certifié ⭐</div>
-        </div>
-      </div>
-      <div class="vendeur-row" onclick="showToast('⏳ Sarah est avec un client — attente estimée 8 min')">
-        <div class="vendeur-avatar" style="background:rgba(155,89,182,0.15);color:#9B59B6">S</div>
-        <div class="vendeur-info">
-          <div class="vendeur-name">Sarah M.</div>
-          <div class="vendeur-rayon">💻 Informatique · Tablettes</div>
-        </div>
-        <div class="vendeur-status">
-          <div class="status-dot-row">
-            <div class="sdot sdot-orange"></div>
-            <span style="font-size:11px;font-weight:600;color:var(--orange)">Avec client</span>
-          </div>
-          <div class="wait-tag">~8 min</div>
-        </div>
-      </div>
-      <div class="vendeur-row" onclick="showToast('📚 Marc est libre ! Rayon Livres & Culture — 2ème étage')">
-        <div class="vendeur-avatar" style="background:rgba(46,204,113,0.12);color:var(--green)">M</div>
-        <div class="vendeur-info">
-          <div class="vendeur-name">Marc D.</div>
-          <div class="vendeur-rayon">📚 Livres · Vinyles · Culture</div>
-        </div>
-        <div class="vendeur-status">
-          <div class="status-dot-row">
-            <div class="sdot sdot-green"></div>
-            <span style="font-size:11px;font-weight:600;color:var(--green)">Disponible</span>
-          </div>
-          <div class="wait-tag">Passport certifié ⭐</div>
-        </div>
-      </div>
-      <div class="vendeur-row" onclick="showToast('📺 Lucie est en pause — retour dans 15 min')">
-        <div class="vendeur-avatar" style="background:rgba(231,76,60,0.12);color:var(--red)">L</div>
-        <div class="vendeur-info">
-          <div class="vendeur-name">Lucie B.</div>
-          <div class="vendeur-rayon">📺 TV · Son · Électronique</div>
-        </div>
-        <div class="vendeur-status">
-          <div class="status-dot-row">
-            <div class="sdot sdot-red"></div>
-            <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4)">En pause</span>
-          </div>
-          <div class="wait-tag">~15 min</div>
-        </div>
-      </div>
-      <div class="vendeur-row" onclick="showToast('🎮 Kevin est disponible — rayon Gaming 1er étage !')">
-        <div class="vendeur-avatar" style="background:rgba(245,166,35,0.12);color:var(--yellow)">K</div>
-        <div class="vendeur-info">
-          <div class="vendeur-name">Kevin T.</div>
-          <div class="vendeur-rayon">🎮 Gaming · Jeux · Consoles</div>
-        </div>
-        <div class="vendeur-status">
-          <div class="status-dot-row">
-            <div class="sdot sdot-green"></div>
-            <span style="font-size:11px;font-weight:600;color:var(--green)">Disponible</span>
-          </div>
-          <div class="wait-tag">Passport certifié ⭐</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- STOCK EN MAGASIN -->
-    <div style="padding:0 20px 6px">
-      <div class="sec-label">Stock en magasin</div>
-    </div>
+    <div style="padding:0 20px 6px"><div class="sec-lbl">Stock en magasin</div></div>
     <div class="stock-card">
-      <div class="stock-header">
-        <div class="stock-title">Disponibilité produits</div>
-        <div class="aff-badge badge-green">Mis à jour</div>
-      </div>
-      <div class="stock-search">
-        <span style="font-size:14px;opacity:.4">🔍</span>
-        <input type="text" placeholder="Rechercher un produit..." id="stock-input" oninput="filterStock(this.value)">
-      </div>
-      <div id="stock-list">
-        <div class="stock-item" onclick="showToast('📱 iPhone 16 Pro — 4 unités en rayon. Emplacement : Zone Tech A3')">
-          <div class="stock-icon">📱</div>
-          <div class="stock-info">
-            <div class="stock-name">iPhone 16 Pro 128Go</div>
-            <div class="stock-ref">REF-IP16P-128-TIT</div>
-          </div>
-          <div class="stock-qty">
-            <div class="stock-num plenty">4</div>
-            <div class="stock-label">en rayon</div>
-          </div>
-        </div>
-        <div class="stock-item" onclick="showToast('💻 MacBook Air M3 — 2 unités restantes. Zone Info B1')">
-          <div class="stock-icon">💻</div>
-          <div class="stock-info">
-            <div class="stock-name">MacBook Air M3 256Go</div>
-            <div class="stock-ref">REF-MBA-M3-256-SL</div>
-          </div>
-          <div class="stock-qty">
-            <div class="stock-num low">2</div>
-            <div class="stock-label">restants</div>
-          </div>
-        </div>
-        <div class="stock-item" onclick="showToast('🎧 Sony WH-1000XM5 — Rupture en magasin. Disponible sur Fnac.com J+1')">
-          <div class="stock-icon">🎧</div>
-          <div class="stock-info">
-            <div class="stock-name">Sony WH-1000XM5</div>
-            <div class="stock-ref">REF-SONY-WH5-BLK</div>
-          </div>
-          <div class="stock-qty">
-            <div class="stock-num none">0</div>
-            <div class="stock-label">rupture</div>
-          </div>
-        </div>
-        <div class="stock-item" onclick="showToast('📺 Samsung 55 QLED — 3 unités en vitrine. Zone TV C2')">
-          <div class="stock-icon">📺</div>
-          <div class="stock-info">
-            <div class="stock-name">Samsung 55" QLED 4K</div>
-            <div class="stock-ref">REF-SAM-55Q-2025</div>
-          </div>
-          <div class="stock-qty">
-            <div class="stock-num plenty">3</div>
-            <div class="stock-label">en vitrine</div>
-          </div>
-        </div>
-        <div class="stock-item" onclick="showToast('🎮 PS5 Standard — 1 unité. Dernière ! Zone Gaming D4')">
-          <div class="stock-icon">🎮</div>
-          <div class="stock-info">
-            <div class="stock-name">PlayStation 5 Standard</div>
-            <div class="stock-ref">REF-PS5-STD-2024</div>
-          </div>
-          <div class="stock-qty">
-            <div class="stock-num low">1</div>
-            <div class="stock-label">dernière</div>
-          </div>
-        </div>
-        <div class="stock-item" onclick="showToast('📷 Fujifilm X100VI — 6 unités en stock. Zone Photo A1')">
-          <div class="stock-icon">📷</div>
-          <div class="stock-info">
-            <div class="stock-name">Fujifilm X100VI</div>
-            <div class="stock-ref">REF-FUJI-X100VI-BK</div>
-          </div>
-          <div class="stock-qty">
-            <div class="stock-num plenty">6</div>
-            <div class="stock-label">en stock</div>
-          </div>
-        </div>
+      <div class="stock-hdr"><div style="font-size:13px;font-weight:700">Disponibilité produits</div><div class="badge bg">En direct</div></div>
+      <div class="stock-search"><span style="font-size:14px;opacity:.4">🔍</span><input type="text" placeholder="Rechercher un produit..." oninput="filterStock(this.value)"></div>
+      <div id="slist">
+        <div class="sitem" onclick="toast('📱 iPhone 16 Pro — 4 unités · Zone Tech A3')"><div class="sicon">📱</div><div style="flex:1"><div class="sname">iPhone 16 Pro 128Go</div><div class="sref">REF-IP16P-128</div></div><div class="sqty"><div class="snum sn-g">4</div><div class="slbl">en rayon</div></div></div>
+        <div class="sitem" onclick="toast('💻 MacBook Air M3 — 2 restants · Zone Info B1')"><div class="sicon">💻</div><div style="flex:1"><div class="sname">MacBook Air M3</div><div class="sref">REF-MBA-M3-256</div></div><div class="sqty"><div class="snum sn-o">2</div><div class="slbl">restants</div></div></div>
+        <div class="sitem" onclick="toast('🎧 Sony WH-1000XM5 — Rupture. Dispo Fnac.com J+1')"><div class="sicon">🎧</div><div style="flex:1"><div class="sname">Sony WH-1000XM5</div><div class="sref">REF-SONY-WH5</div></div><div class="sqty"><div class="snum sn-r">0</div><div class="slbl">rupture</div></div></div>
+        <div class="sitem" onclick="toast('📺 Samsung 55 QLED — 3 unités · Zone TV C2')"><div class="sicon">📺</div><div style="flex:1"><div class="sname">Samsung 55" QLED 4K</div><div class="sref">REF-SAM-55Q</div></div><div class="sqty"><div class="snum sn-g">3</div><div class="slbl">en vitrine</div></div></div>
+        <div class="sitem" onclick="toast('🎮 PS5 — 1 unité ! Dernière · Zone Gaming D4')"><div class="sicon">🎮</div><div style="flex:1"><div class="sname">PlayStation 5 Standard</div><div class="sref">REF-PS5-STD</div></div><div class="sqty"><div class="snum sn-o">1</div><div class="slbl">dernière</div></div></div>
+        <div class="sitem" onclick="toast('📷 Fujifilm X100VI — 6 en stock · Zone Photo A1')"><div class="sicon">📷</div><div style="flex:1"><div class="sname">Fujifilm X100VI</div><div class="sref">REF-FUJI-X100VI</div></div><div class="sqty"><div class="snum sn-g">6</div><div class="slbl">en stock</div></div></div>
       </div>
     </div>
+    <div style="padding:0 20px 6px"><div class="sec-lbl">Services disponibles maintenant</div></div>
+    <div class="srv-grid">
+      <div class="srv-card" onclick="toast('🔧 Atelier ouvert ! 2 techniciens dispo — sans RDV')"><div class="srv-icon">🔧</div><div class="srv-name">Atelier Réparation</div><div class="srv-info">Écran, batterie, diagnostics</div><div class="srv-srow"><div class="sdot sd-g"></div><div class="srv-s" style="color:var(--g)">Ouvert · 0 min</div></div></div>
+      <div class="srv-card" onclick="toast('📦 Click & Collect libre — présentez votre QR')"><div class="srv-icon">📦</div><div class="srv-name">Click & Collect</div><div class="srv-info">Retrait de commande</div><div class="srv-srow"><div class="sdot sd-g"></div><div class="srv-s" style="color:var(--g)">Libre · 2 min</div></div></div>
+      <div class="srv-card" onclick="toast('♻️ Bac de collecte disponible — SAV en caisse')"><div class="srv-icon">♻️</div><div class="srv-name">Fnac Loop</div><div class="srv-info">Reprise & recyclage</div><div class="srv-srow"><div class="sdot sd-g"></div><div class="srv-s" style="color:var(--g)">Disponible</div></div></div>
+      <div class="srv-card" onclick="toast('🎧 Zone écoute — casques et enceintes à tester')"><div class="srv-icon">🎧</div><div class="srv-name">Zone Écoute</div><div class="srv-info">Test audio & hi-fi</div><div class="srv-srow"><div class="sdot sd-o"></div><div class="srv-s" style="color:var(--or)">1 place libre</div></div></div>
+      <div class="srv-card" onclick="toast('⭐ Conseiller Fnac+ Max dispo ce matin !')"><div class="srv-icon">⭐</div><div class="srv-name">Conseiller Fnac+</div><div class="srv-info">Abonnement Max dédié</div><div class="srv-srow"><div class="sdot sd-g"></div><div class="srv-s" style="color:var(--g)">RDV dispo</div></div></div>
+      <div class="srv-card" onclick="toast('🎮 Démo PS5 Pro & Xbox — dans 12 min en Gaming')"><div class="srv-icon">🎮</div><div class="srv-name">Démo Gaming</div><div class="srv-info">PS5 Pro & Xbox live</div><div class="srv-srow"><div class="sdot sd-o"></div><div class="srv-s" style="color:var(--or)">Dans 12 min</div></div></div>
+    </div>
+    <div class="ref-btn" onclick="refreshStore()"><span id="ricon">↻</span>Actualiser les données</div>
+  </div>
 
-    <!-- SERVICES DISPONIBLES -->
-    <div style="padding:0 20px 6px">
-      <div class="sec-label">Services disponibles maintenant</div>
+  <!-- ════ PROFIL ════ -->
+  <div class="screen" id="s-profile">
+    <div class="prof-hdr">
+      <div class="avatar">M</div>
+      <div><div class="pname">Maellys Dupont</div><div class="pemail">maellys.dupont@email.fr</div><div class="ptier">⭐ Fnac+ Max</div></div>
     </div>
-    <div class="services-grid">
-      <div class="service-card" onclick="showToast('🔧 Atelier réparation ouvert ! 2 techniciens disponibles — sans RDV')">
-        <div class="service-icon">🔧</div>
-        <div class="service-name">Atelier Réparation</div>
-        <div class="service-info">Écran, batterie, diagnostics</div>
-        <div class="service-status-row">
-          <div class="sdot sdot-green"></div>
-          <div class="service-status" style="color:var(--green)">Ouvert · 0 min</div>
-        </div>
-      </div>
-      <div class="service-card" onclick="showToast('📦 Zone retrait click & collect libre — présentez votre QR de commande')">
-        <div class="service-icon">📦</div>
-        <div class="service-name">Click & Collect</div>
-        <div class="service-info">Retrait de commande</div>
-        <div class="service-status-row">
-          <div class="sdot sdot-green"></div>
-          <div class="service-status" style="color:var(--green)">Libre · 2 min</div>
-        </div>
-      </div>
-      <div class="service-card" onclick="showToast('♻️ Bac de collecte disponible — apportez votre produit en caisse SAV')">
-        <div class="service-icon">♻️</div>
-        <div class="service-name">Fnac Loop</div>
-        <div class="service-info">Reprise & recyclage</div>
-        <div class="service-status-row">
-          <div class="sdot sdot-green"></div>
-          <div class="service-status" style="color:var(--green)">Disponible</div>
-        </div>
-      </div>
-      <div class="service-card" onclick="showToast('🎧 Zone test audio disponible — casques et enceintes à tester librement')">
-        <div class="service-icon">🎧</div>
-        <div class="service-name">Zone Écoute</div>
-        <div class="service-info">Test audio & hi-fi</div>
-        <div class="service-status-row">
-          <div class="sdot sdot-orange"></div>
-          <div class="service-status" style="color:var(--orange)">1 place libre</div>
-        </div>
-      </div>
-      <div class="service-card" onclick="showToast('💳 Prendre un RDV Fnac+ Max avec un conseiller dédié ce matin !')">
-        <div class="service-icon">⭐</div>
-        <div class="service-name">Conseiller Fnac+</div>
-        <div class="service-info">Abonnement Max dédié</div>
-        <div class="service-status-row">
-          <div class="sdot sdot-green"></div>
-          <div class="service-status" style="color:var(--green)">RDV dispo</div>
-        </div>
-      </div>
-      <div class="service-card" onclick="showToast('🎮 Démonstrations PS5 Pro et Xbox toutes les 30 min en rayon Gaming')">
-        <div class="service-icon">🎮</div>
-        <div class="service-name">Démo Gaming</div>
-        <div class="service-info">PS5 Pro & Xbox live</div>
-        <div class="service-status-row">
-          <div class="sdot sdot-orange"></div>
-          <div class="service-status" style="color:var(--orange)">Dans 12 min</div>
-        </div>
-      </div>
+    <div class="psec">
+      <div class="psec-t">Mon abonnement</div>
+      <div class="pitem" onclick="toast('✓ Fnac+ Max actif — renouvellement le 01/05/2026')"><div class="pil"><div class="piicon">⭐</div><div><div class="pilbl">Fnac+ Max</div><div style="font-size:11px;color:rgba(255,255,255,.4)">Réparations illimitées · Score CO₂ · Conseiller dédié</div></div></div><div class="pival">29,99€/mois</div></div>
     </div>
+    <div class="psec">
+      <div class="psec-t">Mon compte</div>
+      <div class="pitem" onclick="go('s-home')"><div class="pil"><div class="piicon">📦</div><div class="pilbl">Mes Passports</div></div><div style="display:flex;align-items:center;gap:8px"><div class="pival">3 actifs</div><div class="piarr">›</div></div></div>
+      <div class="pitem" onclick="go('s-loop')"><div class="pil"><div class="piicon">🌱</div><div class="pilbl">Points Loop</div></div><div style="display:flex;align-items:center;gap:8px"><div class="pival" style="color:var(--g)">142 pts</div><div class="piarr">›</div></div></div>
+      <div class="pitem" onclick="toast('Score CO₂ A+ — Tu as évité 147 kg de CO₂ !')"><div class="pil"><div class="piicon">🌍</div><div class="pilbl">Impact environnemental</div></div><div style="display:flex;align-items:center;gap:8px"><div class="pival" style="color:var(--g)">A+ · 147 kg</div><div class="piarr">›</div></div></div>
+      <div class="pitem" onclick="go('s-store')"><div class="pil"><div class="piicon">📍</div><div class="pilbl">Store Live</div></div><div style="display:flex;align-items:center;gap:8px"><div class="pival">Voir le magasin</div><div class="piarr">›</div></div></div>
+    </div>
+    <div class="psec">
+      <div class="psec-t">Historique</div>
+      <div class="pitem" onclick="go('s-sav')"><div class="pil"><div class="piicon">🔧</div><div><div class="pilbl">SAV en cours</div><div style="font-size:11px;color:var(--r)">TV Samsung — Ticket #48291</div></div></div><div class="piarr">›</div></div>
+      <div class="pitem" onclick="toast('🔔 Notifications activées')"><div class="pil"><div class="piicon">🔔</div><div class="pilbl">Notifications</div></div><div style="display:flex;align-items:center;gap:8px"><div class="pival">Activées</div><div class="piarr">›</div></div></div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
 
-    <!-- REFRESH -->
-    <div class="refresh-btn" onclick="refreshData()">
-      <div class="refresh-icon" id="refresh-icon">↻</div>
-      Actualiser les données
+  <!-- ════ MODALS PRODUITS ════ -->
+  <div class="modal" id="m-iphone">
+    <div class="modal-hdr"><div class="back-btn" onclick="closeModal('m-iphone')">‹</div><div class="modal-title">iPhone 12 Pro</div></div>
+    <div class="modal-body">
+      <div class="prod-hero"><div class="hero-icon">📱</div><div class="hero-name">iPhone 12 Pro</div><div class="hero-meta">Apple · 128 Go · Graphite · Neuf</div>
+        <div class="qr-block"><div class="qr-code" id="qr1"></div><div class="qr-lbl">FP-2022-0315-IP12P</div></div>
+        <div><span class="tag">Passport actif</span><span class="tag" style="margin-left:4px">SAV simplifié</span><span class="tag" style="margin-left:4px">Loop éligible</span></div>
+      </div>
+      <div class="info-grid">
+        <div class="info-cell"><div class="ic-lbl">Date d'achat</div><div class="ic-val">15 mars 2022</div></div>
+        <div class="info-cell"><div class="ic-lbl">Garantie</div><div class="ic-val ic-r">18 jours restants</div></div>
+        <div class="info-cell"><div class="ic-lbl">Magasin</div><div class="ic-val">Fnac Montpellier</div></div>
+        <div class="info-cell"><div class="ic-lbl">Score CO₂</div><div class="ic-val ic-g">A+ · –12 kg</div></div>
+        <div class="info-cell"><div class="ic-lbl">Batterie</div><div class="ic-val ic-y">72% capacité</div></div>
+        <div class="info-cell"><div class="ic-lbl">État</div><div class="ic-val ic-g">Bon état</div></div>
+      </div>
+      <div class="sec-title" style="padding-left:0;margin-bottom:8px">Historique Passport</div>
+      <div class="hist-item"><div class="hdot hd-y"></div><div><div class="hdate">28 mars 2026</div><div class="hevent">⚠️ Garantie expire dans 18 jours</div></div></div>
+      <div class="hist-item"><div class="hdot hd-g"></div><div><div class="hdate">12 jan. 2025</div><div class="hevent">🔧 Remplacement batterie — Atelier Fnac</div></div></div>
+      <div class="hist-item"><div class="hdot hd-g"></div><div><div class="hdate">15 mars 2022</div><div class="hevent">✓ Passport activé — Achat en magasin</div></div></div>
+      <div class="act-btns">
+        <button class="abtn abtn-p" onclick="toast('✓ Garantie renouvelée — Fnac+ Max activé !')"><div class="abtn-icon">🛡️</div>Renouveler</button>
+        <button class="abtn abtn-g" onclick="closeModal('m-iphone');go('s-loop')"><div class="abtn-icon">🌱</div>Fnac Loop</button>
+        <button class="abtn abtn-s" onclick="closeModal('m-iphone');go('s-sav')"><div class="abtn-icon">🔧</div>SAV rapide</button>
+        <button class="abtn abtn-d" onclick="toast('📋 Rapport d\'état envoyé par email !')"><div class="abtn-icon">📋</div>Rapport état</button>
+      </div>
     </div>
+  </div>
 
-  </div><!-- end screen -->
+  <div class="modal" id="m-mac">
+    <div class="modal-hdr"><div class="back-btn" onclick="closeModal('m-mac')">‹</div><div class="modal-title">MacBook Air M2</div></div>
+    <div class="modal-body">
+      <div class="prod-hero"><div class="hero-icon">💻</div><div class="hero-name">MacBook Air M2</div><div class="hero-meta">Apple · 8 Go RAM · 256 Go SSD · Reconditionné</div>
+        <div class="qr-block"><div class="qr-code" id="qr2"></div><div class="qr-lbl">FP-2025-0108-MBA-M2</div></div>
+        <div><span class="tag" style="background:rgba(46,204,113,.15);color:var(--g)">Reconditionné</span><span class="tag" style="margin-left:4px">Passport actif</span></div>
+      </div>
+      <div class="info-grid">
+        <div class="info-cell"><div class="ic-lbl">Date d'achat</div><div class="ic-val">08 jan. 2025</div></div>
+        <div class="info-cell"><div class="ic-lbl">Garantie</div><div class="ic-val ic-g">~2 ans restants</div></div>
+        <div class="info-cell"><div class="ic-lbl">Source</div><div class="ic-val">Fnac.com</div></div>
+        <div class="info-cell"><div class="ic-lbl">Score CO₂</div><div class="ic-val ic-g">A+ · –95 kg</div></div>
+      </div>
+      <div class="hist-item"><div class="hdot hd-g"></div><div><div class="hdate">08 jan. 2025</div><div class="hevent">✓ Passport activé — Achat reconditionné</div></div></div>
+      <div class="act-btns">
+        <button class="abtn abtn-p" onclick="toast('✓ Garantie valide jusqu\'en jan. 2027')"><div class="abtn-icon">✓</div>Vérifier état</button>
+        <button class="abtn abtn-s" onclick="toast('📚 Guide d\'utilisation M2 envoyé !')"><div class="abtn-icon">📚</div>Tutoriels</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="m-tv">
+    <div class="modal-hdr"><div class="back-btn" onclick="closeModal('m-tv')">‹</div><div class="modal-title">TV Samsung 55" QLED</div></div>
+    <div class="modal-body">
+      <div class="prod-hero"><div class="hero-icon">📺</div><div class="hero-name">TV Samsung 55" QLED</div><div class="hero-meta">Samsung · 55 pouces · 4K · Neuf</div>
+        <div class="qr-block"><div class="qr-code" id="qr3"></div><div class="qr-lbl">FP-2020-1202-SAM55Q</div></div>
+        <div><span class="tag" style="background:rgba(231,76,60,.12);color:var(--r)">SAV en cours</span><span class="tag" style="margin-left:4px">Ticket #48291</span></div>
+      </div>
+      <div class="alert-banner" style="margin:0 0 16px">
+        <div class="al-icon">🔧</div>
+        <div><div class="al-title">SAV en cours — Ticket #48291</div><div class="al-txt">Prise en charge le 25/03. Pièce commandée. Délai : 5-7 jours ouvrés.</div></div>
+      </div>
+      <div class="info-grid">
+        <div class="info-cell"><div class="ic-lbl">Date d'achat</div><div class="ic-val">02 déc. 2020</div></div>
+        <div class="info-cell"><div class="ic-lbl">Garantie</div><div class="ic-val ic-r">Expirée</div></div>
+        <div class="info-cell"><div class="ic-lbl">Magasin</div><div class="ic-val">Darty</div></div>
+        <div class="info-cell"><div class="ic-lbl">Âge produit</div><div class="ic-val ic-y">5 ans</div></div>
+      </div>
+      <div class="hist-item"><div class="hdot hd-y"></div><div><div class="hdate">28 mars 2026</div><div class="hevent">⏳ Pièce commandée — livraison sous 5 jours</div></div></div>
+      <div class="hist-item"><div class="hdot hd-g"></div><div><div class="hdate">25 mars 2026</div><div class="hevent">✓ Diagnostic — Problème écran confirmé</div></div></div>
+      <div class="act-btns">
+        <button class="abtn abtn-s" onclick="toast('📲 Alerte activée — tu seras notifié dès la fin de réparation !')"><div class="abtn-icon">🔔</div>Suivre le SAV</button>
+        <button class="abtn abtn-g" onclick="toast('♻️ Option Loop dispo après réparation')"><div class="abtn-icon">🌱</div>Préparer Loop</button>
+      </div>
+    </div>
+  </div>
 
   <!-- BOTTOM NAV -->
-  <div class="bottom-nav">
-    <button class="nav-item" onclick="showToast('🏠 Retour accueil')">
-      <div class="nav-icon">🏠</div>
-      <div class="nav-label">Accueil</div>
-    </button>
-    <button class="nav-item" onclick="showToast('⬛ Scanner')">
-      <div class="nav-icon">⬛</div>
-      <div class="nav-label">Scanner</div>
-    </button>
-    <button class="nav-item" onclick="showToast('🔧 SAV')">
-      <div class="nav-icon">🔧</div>
-      <div class="nav-label">SAV</div>
-    </button>
-    <button class="nav-item" onclick="showToast('🌱 Loop')">
-      <div class="nav-icon">🌱</div>
-      <div class="nav-label">Loop</div>
-    </button>
-    <button class="nav-item active">
-      <div class="nav-icon">📍</div>
-      <div class="nav-label">Store Live</div>
-    </button>
+  <div class="bnav">
+    <button class="ni active" id="n-home" onclick="go('s-home')"><div class="ni-icon">🏠</div><div class="ni-lbl">Accueil</div></button>
+    <button class="ni" id="n-scan" onclick="go('s-scan')"><div class="ni-icon">⬛</div><div class="ni-lbl">Scanner</div></button>
+    <button class="ni" id="n-sav" onclick="go('s-sav')"><div class="ni-icon">🔧</div><div class="ni-lbl">SAV</div></button>
+    <button class="ni" id="n-loop" onclick="go('s-loop')"><div class="ni-icon">🌱</div><div class="ni-lbl">Loop</div></button>
+    <button class="ni" id="n-store" onclick="go('s-store')"><div class="ni-icon">📍</div><div class="ni-lbl">Store Live</div></button>
+    <button class="ni" id="n-profile" onclick="go('s-profile')"><div class="ni-icon">👤</div><div class="ni-lbl">Profil</div></button>
   </div>
 
-  <div class="toast" id="toast"></div>
-
-</div><!-- end phone -->
+  <div class="toast" id="toastel"></div>
+</div>
 
 <script>
-// ── CLOCK ──
-function updateClock() {
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2,'0');
-  const m = String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('livetime').textContent = h + ':' + m;
+// ── SPLASH ──
+setTimeout(()=>{
+  document.getElementById('splash').classList.add('hide');
+  setTimeout(()=>document.getElementById('splash').style.display='none',500);
+},2200);
+
+// ── NAV ──
+const navMap={'s-home':'n-home','s-scan':'n-scan','s-sav':'n-sav','s-loop':'n-loop','s-store':'n-store','s-profile':'n-profile'};
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  if(navMap[id]) document.getElementById(navMap[id]).classList.add('active');
 }
-updateClock();
-setInterval(updateClock, 10000);
+
+// ── MODALS ──
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+
+// ── TOAST ──
+let tt;
+function toast(msg){
+  const t=document.getElementById('toastel');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── CLOCK ──
+function tick(){
+  const n=new Date();
+  const s=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent=s;
+  document.getElementById('ltime').textContent=s;
+}
+tick();setInterval(tick,10000);
+
+// ── SCAN ──
+function simScan(){toast('📷 Scan en cours... Passport trouvé !');setTimeout(()=>openModal('m-iphone'),1200)}
+
+// ── QR CODE ──
+function genQR(id){
+  const el=document.getElementById(id);if(!el)return;
+  const p=Array.from({length:49},(_,i)=>Math.random()>.5?1:0);
+  [0,1,2,3,4,5,6,42,43,44,45,46,47,48].forEach(i=>p[i]=1);
+  p.forEach(v=>{const c=document.createElement('div');c.className='qr-cell '+(v?'qr-on':'qr-off');el.appendChild(c)});
+}
+genQR('qr1');genQR('qr2');genQR('qr3');
 
 // ── CROWD BARS ──
-const hourlyData = [10, 18, 32, 55, 78, 65, 42, 68, 82, 90, 75, 45];
-const currentHour = new Date().getHours() - 9;
-const container = document.getElementById('crowd-bars');
-hourlyData.forEach((val, i) => {
-  const bar = document.createElement('div');
-  bar.className = 'crowd-bar ' + (i <= Math.max(currentHour, 0) ? 'active' : 'inactive');
-  const maxH = 60;
-  bar.style.height = Math.round((val / 100) * maxH) + 'px';
-  if (i === Math.max(currentHour, 0)) {
-    bar.style.background = 'var(--yellow)';
-    bar.style.boxShadow = '0 0 8px rgba(245,166,35,0.4)';
-  }
-  container.appendChild(bar);
+const hData=[10,18,32,55,78,65,42,68,82,90,75,45];
+const curH=new Date().getHours()-9;
+const cb=document.getElementById('cbars');
+hData.forEach((v,i)=>{
+  const b=document.createElement('div');
+  b.className='cbar '+(i<=Math.max(curH,0)?'act':'inact');
+  b.style.height=Math.round((v/100)*56)+'px';
+  if(i===Math.max(curH,0)){b.style.background='var(--y)';b.style.boxShadow='0 0 8px rgba(245,166,35,.4)'}
+  cb.appendChild(b);
 });
 
 // ── HEATMAP ──
-const heatVals = [0.1, 0.2, 0.35, 0.6, 0.85, 0.7, 0.45, 0.75, 0.9, 1.0, 0.8, 0.5];
-const colors = [
-  'rgba(46,204,113,0.2)', 'rgba(46,204,113,0.3)', 'rgba(245,166,35,0.2)',
-  'rgba(245,166,35,0.35)', 'rgba(245,166,35,0.55)', 'rgba(245,166,35,0.4)',
-  'rgba(231,76,60,0.2)', 'rgba(231,76,60,0.4)', 'rgba(231,76,60,0.6)',
-  'rgba(231,76,60,0.85)', 'rgba(231,76,60,0.5)', 'rgba(245,166,35,0.3)'
-];
-const hmap = document.getElementById('heatmap');
-heatVals.forEach((v, i) => {
-  const cell = document.createElement('div');
-  cell.className = 'hmap-cell';
-  cell.style.background = colors[i];
-  if (i === Math.max(currentHour, 0)) {
-    cell.style.outline = '2px solid var(--yellow)';
-    cell.style.outlineOffset = '1px';
-  }
-  hmap.appendChild(cell);
+const hColors=['rgba(46,204,113,.2)','rgba(46,204,113,.3)','rgba(245,166,35,.2)','rgba(245,166,35,.35)','rgba(245,166,35,.55)','rgba(245,166,35,.4)','rgba(231,76,60,.2)','rgba(231,76,60,.4)','rgba(231,76,60,.6)','rgba(231,76,60,.85)','rgba(231,76,60,.5)','rgba(245,166,35,.3)'];
+const hm=document.getElementById('hmap');
+hColors.forEach((c,i)=>{
+  const cell=document.createElement('div');cell.className='hmap-cell';cell.style.background=c;
+  if(i===Math.max(curH,0)){cell.style.outline='2px solid var(--y)';cell.style.outlineOffset='1px'}
+  hm.appendChild(cell);
 });
 
-// ── STORE SELECT ──
-function selectStore(el, name) {
-  document.querySelectorAll('.store-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  showToast('📍 Magasin sélectionné : Fnac ' + name);
+// ── STORE ──
+function selStore(el,name){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');toast('📍 Fnac '+name+' sélectionné');
 }
-
-// ── STOCK FILTER ──
-function filterStock(val) {
-  const items = document.querySelectorAll('.stock-item');
-  items.forEach(item => {
-    const name = item.querySelector('.stock-name').textContent.toLowerCase();
-    item.style.display = name.includes(val.toLowerCase()) ? 'flex' : 'none';
+function filterStock(v){
+  document.querySelectorAll('.sitem').forEach(item=>{
+    item.style.display=item.querySelector('.sname').textContent.toLowerCase().includes(v.toLowerCase())?'flex':'none';
   });
 }
-
-// ── REFRESH ──
-function refreshData() {
-  const icon = document.getElementById('refresh-icon');
-  icon.style.animation = 'spin 0.6s linear';
-  const times = ['2 min', '4 min', '1 min', '3 min', '11 min', '9 min', '7 min', '5 min'];
-  const pick = () => times[Math.floor(Math.random() * times.length)];
-  setTimeout(() => {
-    document.getElementById('caisse-time').textContent = pick();
-    document.getElementById('sav-time').textContent = pick();
-    document.getElementById('retrait-time').textContent = pick();
-    document.getElementById('conseil-time').textContent = pick();
-    document.getElementById('crowd-count').textContent = Math.floor(Math.random() * 80 + 60);
-    icon.style.animation = '';
-    showToast('✓ Données actualisées — ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}));
-  }, 700);
-}
-
-const style = document.createElement('style');
-style.textContent = '@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }';
-document.head.appendChild(style);
-
-// ── TOAST ──
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+function refreshStore(){
+  const r=document.getElementById('ricon');
+  r.style.animation='spin .6s linear';
+  const times=['1 min','2 min','3 min','4 min','5 min','7 min','9 min','11 min'];
+  const p=()=>times[Math.floor(Math.random()*times.length)];
+  setTimeout(()=>{
+    document.getElementById('wt1').textContent=p();
+    document.getElementById('wt2').textContent=p();
+    document.getElementById('wt3').textContent=p();
+    document.getElementById('wt4').textContent=p();
+    document.getElementById('ccount').textContent=Math.floor(Math.random()*80+60);
+    r.style.animation='';
+    toast('✓ Données actualisées — '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}));
+  },700);
 }
 </script>
-
 </body>
 </html>
