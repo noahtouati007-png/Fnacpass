@@ -3,98 +3,357 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FnacPass — Ton produit a une vie</title>
+<title>FnacPass — Store Live</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --fnac-yellow: #F5A623;
-  --fnac-black: #1A1A1A;
-  --fnac-green: #2ECC71;
-  --fnac-red: #E74C3C;
-  --fnac-gray: #BDC3C7;
-  --fnac-white: #FFFFFF;
-  --fnac-dark: #111111;
-  --fnac-card: #242424;
-  --fnac-border: rgba(245,166,35,0.15);
+  --yellow: #F5A623;
+  --black: #1A1A1A;
+  --green: #2ECC71;
+  --red: #E74C3C;
+  --blue: #3498DB;
+  --orange: #E67E22;
+  --card: #242424;
+  --border: rgba(245,166,35,0.12);
+  --dark: #111111;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 body {
   font-family: 'Montserrat', sans-serif;
-  background: var(--fnac-dark);
-  color: var(--fnac-white);
+  background: var(--dark);
+  color: #fff;
   min-height: 100vh;
-  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(245,166,35,0.06) 0%, transparent 60%);
 }
 
-/* ── SPLASH SCREEN ── */
-#splash {
-  position: fixed; inset: 0;
-  background: var(--fnac-black);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  z-index: 1000;
-  transition: opacity 0.5s, transform 0.5s;
-}
-#splash.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
-.splash-logo { font-size: 52px; font-weight: 900; color: var(--fnac-yellow); letter-spacing: -2px; }
-.splash-logo span { color: var(--fnac-white); }
-.splash-sub { font-size: 12px; letter-spacing: 0.2em; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-top: 6px; }
-.splash-bar { width: 200px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 32px; overflow: hidden; }
-.splash-bar-fill { height: 100%; background: var(--fnac-yellow); border-radius: 2px; animation: load 2s ease forwards; }
-@keyframes load { from { width: 0; } to { width: 100%; } }
-
-/* ── PHONE FRAME ── */
-.app-wrapper {
-  display: flex; align-items: center; justify-content: center;
-  min-height: 100vh; padding: 20px;
-  background: radial-gradient(ellipse at 50% 50%, #2a1f00 0%, var(--fnac-dark) 70%);
-}
 .phone {
-  width: 390px; min-height: 844px;
-  background: var(--fnac-black);
+  width: 390px;
+  min-height: 844px;
+  background: var(--black);
   border-radius: 50px;
-  border: 2px solid rgba(245,166,35,0.3);
+  border: 2px solid rgba(245,166,35,0.25);
   overflow: hidden;
   position: relative;
-  box-shadow: 0 0 0 8px rgba(0,0,0,0.5), 0 40px 80px rgba(0,0,0,0.8), 0 0 60px rgba(245,166,35,0.08);
+  box-shadow: 0 0 0 8px rgba(0,0,0,0.5), 0 40px 80px rgba(0,0,0,0.8);
 }
+
 .notch {
   width: 120px; height: 30px;
-  background: var(--fnac-black);
+  background: var(--black);
   border-radius: 0 0 20px 20px;
   margin: 0 auto;
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   z-index: 100;
-  border: 2px solid rgba(245,166,35,0.2);
+  border: 2px solid rgba(245,166,35,0.15);
   border-top: none;
 }
+
 .status-bar {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 28px 8px;
+  display: flex; justify-content: space-between;
+  padding: 12px 28px 6px;
   font-size: 11px; font-weight: 600;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.6);
   font-family: 'Space Mono', monospace;
 }
 
-/* ── SCREENS ── */
 .screen {
-  display: none;
-  flex-direction: column;
-  height: calc(844px - 50px);
-  overflow-y: auto;
-  scrollbar-width: none;
+  display: flex; flex-direction: column;
+  height: calc(844px - 46px);
+  overflow-y: auto; scrollbar-width: none;
+  padding-bottom: 80px;
 }
 .screen::-webkit-scrollbar { display: none; }
-.screen.active { display: flex; }
 
-/* ── BOTTOM NAV ── */
+/* HEADER */
+.store-header {
+  padding: 14px 20px 16px;
+  background: linear-gradient(180deg, rgba(245,166,35,0.06) 0%, transparent 100%);
+}
+.back-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.back-btn {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; cursor: pointer; color: #fff;
+}
+.header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+.header-title span { color: var(--yellow); }
+.header-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+/* STORE SELECTOR */
+.store-selector {
+  padding: 0 20px 14px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.selector-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: rgba(255,255,255,0.35);
+}
+.store-scroll {
+  display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px;
+}
+.store-scroll::-webkit-scrollbar { display: none; }
+.store-chip {
+  flex-shrink: 0; padding: 8px 14px;
+  border-radius: 20px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  border: 1px solid var(--border);
+  background: var(--card); color: rgba(255,255,255,0.6);
+}
+.store-chip.active {
+  background: var(--yellow); color: var(--black); border-color: var(--yellow);
+}
+.store-chip:hover:not(.active) { border-color: rgba(245,166,35,0.3); }
+
+/* LIVE BANNER */
+.live-banner {
+  margin: 0 20px 14px;
+  background: var(--card);
+  border-radius: 16px; border: 1px solid var(--border);
+  padding: 14px 16px;
+  display: flex; gap: 12px; align-items: center;
+}
+.live-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+  animation: livepulse 1.5s infinite;
+}
+@keyframes livepulse {
+  0%,100% { opacity:1; transform:scale(1); box-shadow: 0 0 0 0 rgba(46,204,113,0.4); }
+  50% { opacity:0.8; transform:scale(1.2); box-shadow: 0 0 0 6px rgba(46,204,113,0); }
+}
+.live-text { font-size: 12px; color: rgba(255,255,255,0.7); flex: 1; }
+.live-title { font-weight: 700; color: #fff; font-size: 13px; margin-bottom: 2px; }
+.live-time {
+  font-size: 10px; font-family: 'Space Mono', monospace;
+  color: var(--yellow); font-weight: 700;
+}
+
+/* SECTION TITLE */
+.sec { padding: 0 20px 10px; }
+.sec-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-bottom: 8px;
+}
+
+/* AFFLUENCE CARD */
+.affluence-card {
+  margin: 0 20px 12px;
+  background: var(--card); border-radius: 18px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.aff-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px 10px;
+}
+.aff-title { font-size: 13px; font-weight: 700; }
+.aff-badge {
+  font-size: 10px; font-weight: 700; padding: 3px 10px;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+}
+.badge-green { background: rgba(46,204,113,0.15); color: var(--green); }
+.badge-orange { background: rgba(230,126,34,0.15); color: var(--orange); }
+.badge-red { background: rgba(231,76,60,0.15); color: var(--red); }
+
+.crowd-visual {
+  padding: 4px 16px 14px;
+  display: flex; gap: 3px; align-items: flex-end;
+}
+.crowd-bar {
+  flex: 1; border-radius: 3px 3px 0 0;
+  transition: height 0.5s ease;
+  position: relative;
+}
+.crowd-bar.active { background: var(--yellow); }
+.crowd-bar.inactive { background: rgba(255,255,255,0.08); }
+.crowd-labels {
+  display: flex; justify-content: space-between;
+  padding: 0 16px 10px;
+  font-size: 9px; color: rgba(255,255,255,0.3);
+  font-family: 'Space Mono', monospace;
+}
+.crowd-now {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.crowd-stat { text-align: center; }
+.crowd-num { font-size: 20px; font-weight: 900; color: var(--yellow); font-family: 'Space Mono', monospace; }
+.crowd-lbl { font-size: 9px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+/* WAIT TIME */
+.wait-grid {
+  margin: 0 20px 12px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.wait-card {
+  background: var(--card); border-radius: 16px;
+  border: 1px solid var(--border); padding: 14px;
+}
+.wait-icon { font-size: 20px; margin-bottom: 8px; }
+.wait-title { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 4px; font-weight: 600; }
+.wait-time {
+  font-size: 22px; font-weight: 900; font-family: 'Space Mono', monospace;
+  line-height: 1;
+}
+.wait-time.green { color: var(--green); }
+.wait-time.orange { color: var(--orange); }
+.wait-time.red { color: var(--red); }
+.wait-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 3px; }
+.wait-bar { height: 3px; border-radius: 2px; margin-top: 8px; background: rgba(255,255,255,0.06); }
+.wait-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+
+/* VENDEURS */
+.vendeurs-card {
+  margin: 0 20px 12px;
+  background: var(--card); border-radius: 18px;
+  border: 1px solid var(--border);
+}
+.vendeurs-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px 10px;
+}
+.vendeurs-title { font-size: 13px; font-weight: 700; }
+.vendeurs-count {
+  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  border-radius: 10px; background: rgba(46,204,113,0.12); color: var(--green);
+}
+.vendeur-row {
+  display: flex; gap: 10px; align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer; transition: background 0.15s;
+}
+.vendeur-row:hover { background: rgba(255,255,255,0.02); }
+.vendeur-avatar {
+  width: 36px; height: 36px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; flex-shrink: 0;
+}
+.vendeur-info { flex: 1; }
+.vendeur-name { font-size: 13px; font-weight: 600; }
+.vendeur-rayon { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.vendeur-status {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+}
+.status-dot-row {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600;
+}
+.sdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.sdot-green { background: var(--green); }
+.sdot-orange { background: var(--orange); animation: blink 1.5s infinite; }
+.sdot-red { background: var(--red); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.wait-tag {
+  font-size: 9px; padding: 2px 6px; border-radius: 6px;
+  background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4);
+  font-family: 'Space Mono', monospace;
+}
+
+/* STOCK PAR RAYON */
+.stock-card {
+  margin: 0 20px 12px;
+  background: var(--card); border-radius: 18px;
+  border: 1px solid var(--border);
+}
+.stock-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px 10px;
+}
+.stock-title { font-size: 13px; font-weight: 700; }
+.stock-search {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.04);
+  margin: 0 16px 10px;
+  border-radius: 10px; border: 1px solid rgba(255,255,255,0.06);
+}
+.stock-search input {
+  background: none; border: none; color: #fff; font-size: 12px;
+  font-family: 'Montserrat', sans-serif; width: 100%; outline: none;
+}
+.stock-search input::placeholder { color: rgba(255,255,255,0.3); }
+.stock-item {
+  display: flex; gap: 10px; align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.stock-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.stock-info { flex: 1; }
+.stock-name { font-size: 12px; font-weight: 600; }
+.stock-ref { font-size: 10px; color: rgba(255,255,255,0.3); font-family: 'Space Mono', monospace; margin-top: 1px; }
+.stock-qty { text-align: right; }
+.stock-num { font-size: 16px; font-weight: 800; font-family: 'Space Mono', monospace; }
+.stock-num.plenty { color: var(--green); }
+.stock-num.low { color: var(--orange); }
+.stock-num.none { color: var(--red); }
+.stock-label { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 1px; text-align: right; }
+
+/* HEATMAP */
+.heatmap-card {
+  margin: 0 20px 12px;
+  background: var(--card); border-radius: 18px;
+  border: 1px solid var(--border); padding: 14px 16px;
+}
+.heatmap-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+.heatmap-grid {
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px;
+}
+.hmap-cell {
+  height: 18px; border-radius: 3px;
+  transition: all 0.3s;
+}
+.hmap-labels {
+  display: flex; justify-content: space-between;
+  margin-top: 6px;
+  font-size: 9px; color: rgba(255,255,255,0.25);
+  font-family: 'Space Mono', monospace;
+}
+.hmap-legend {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 8px; justify-content: flex-end;
+}
+.hmap-leg-label { font-size: 9px; color: rgba(255,255,255,0.3); }
+.hmap-leg-dots { display: flex; gap: 3px; }
+.hmap-leg-dot { width: 14px; height: 14px; border-radius: 2px; }
+
+/* SERVICES */
+.services-grid {
+  margin: 0 20px 12px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.service-card {
+  background: var(--card); border-radius: 16px;
+  border: 1px solid var(--border); padding: 14px;
+  cursor: pointer; transition: all 0.2s;
+}
+.service-card:hover { border-color: rgba(245,166,35,0.3); transform: translateY(-1px); }
+.service-icon { font-size: 22px; margin-bottom: 8px; }
+.service-name { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+.service-info { font-size: 10px; color: rgba(255,255,255,0.4); line-height: 1.4; }
+.service-status-row {
+  display: flex; align-items: center; gap: 4px; margin-top: 6px;
+}
+.service-status { font-size: 10px; font-weight: 600; }
+
+/* BOTTOM NAV */
 .bottom-nav {
   display: flex; justify-content: space-around; align-items: center;
-  padding: 12px 20px 24px;
-  background: var(--fnac-card);
-  border-top: 1px solid var(--fnac-border);
+  padding: 10px 20px 22px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
   position: absolute; bottom: 0; left: 0; right: 0;
   z-index: 50;
 }
@@ -104,1063 +363,527 @@ body {
   background: none; border: none; color: inherit;
 }
 .nav-item.active { opacity: 1; }
-.nav-item.active .nav-icon { background: var(--fnac-yellow); }
 .nav-icon {
-  width: 44px; height: 44px; border-radius: 14px;
+  width: 42px; height: 42px; border-radius: 13px;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.06);
-  font-size: 20px; transition: all 0.2s;
+  background: rgba(255,255,255,0.05); font-size: 18px; transition: all 0.2s;
 }
-.nav-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.6); }
-.nav-item.active .nav-label { color: var(--fnac-yellow); }
+.nav-item.active .nav-icon { background: var(--yellow); }
+.nav-label { font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.5); }
+.nav-item.active .nav-label { color: var(--yellow); }
 
-/* ── HOME SCREEN ── */
-.home-header {
-  padding: 50px 24px 20px;
-  background: linear-gradient(180deg, rgba(245,166,35,0.08) 0%, transparent 100%);
-}
-.home-greeting { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 500; }
-.home-name { font-size: 26px; font-weight: 800; color: var(--fnac-white); margin-top: 2px; }
-.home-name span { color: var(--fnac-yellow); }
-.passport-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.3);
-  border-radius: 20px; padding: 4px 12px; margin-top: 8px;
-  font-size: 11px; font-weight: 700; color: var(--fnac-yellow);
-  text-transform: uppercase; letter-spacing: 0.08em;
-}
-.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--fnac-green); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
-
-.stat-row {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px; padding: 16px 24px;
-}
-.stat-card {
-  background: var(--fnac-card);
-  border-radius: 16px; padding: 14px 12px;
-  border: 1px solid var(--fnac-border);
-  text-align: center;
-}
-.stat-num { font-size: 22px; font-weight: 900; color: var(--fnac-yellow); }
-.stat-label { font-size: 10px; color: rgba(255,255,255,0.4); font-weight: 600; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
-
-.section-title {
-  font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.5);
-  text-transform: uppercase; letter-spacing: 0.1em;
-  padding: 0 24px 12px;
-}
-
-/* ── PRODUCT CARDS ── */
-.product-list { padding: 0 24px; display: flex; flex-direction: column; gap: 12px; }
-.product-card {
-  background: var(--fnac-card); border-radius: 20px;
-  border: 1px solid var(--fnac-border);
-  padding: 16px; display: flex; gap: 14px; align-items: center;
-  cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
-}
-.product-card::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px; background: var(--fnac-yellow);
-}
-.product-card.green::before { background: var(--fnac-green); }
-.product-card.red::before { background: var(--fnac-red); }
-.product-card:hover { transform: translateX(4px); border-color: rgba(245,166,35,0.4); }
-.product-icon {
-  width: 52px; height: 52px; border-radius: 14px;
-  background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px; flex-shrink: 0;
-}
-.product-info { flex: 1; min-width: 0; }
-.product-name { font-size: 14px; font-weight: 700; color: var(--fnac-white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.product-meta { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; }
-.product-status {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700;
-  margin-top: 5px;
-}
-.status-ok { background: rgba(46,204,113,0.15); color: var(--fnac-green); }
-.status-warn { background: rgba(245,166,35,0.15); color: var(--fnac-yellow); }
-.status-bad { background: rgba(231,76,60,0.15); color: var(--fnac-red); }
-.product-arrow { font-size: 18px; color: rgba(255,255,255,0.2); }
-
-/* ── ALERT BANNER ── */
-.alert-banner {
-  margin: 0 24px 16px;
-  background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3);
-  border-radius: 16px; padding: 14px 16px;
-  display: flex; gap: 12px; align-items: flex-start;
-}
-.alert-icon { font-size: 22px; flex-shrink: 0; }
-.alert-text { font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.5; }
-.alert-title { font-weight: 700; color: var(--fnac-red); font-size: 13px; margin-bottom: 3px; }
-
-/* ── QR SCANNER ── */
-.scanner-screen { align-items: center; padding: 50px 24px 100px; }
-.scanner-title { font-size: 24px; font-weight: 900; text-align: center; margin-bottom: 6px; }
-.scanner-sub { font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 32px; }
-.scanner-frame {
-  width: 260px; height: 260px; border-radius: 24px;
-  background: var(--fnac-card); border: 2px solid var(--fnac-yellow);
-  position: relative; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-}
-.scanner-line {
-  position: absolute; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--fnac-yellow), transparent);
-  animation: scan 2s ease-in-out infinite;
-}
-@keyframes scan { 0%{top:10%} 50%{top:85%} 100%{top:10%} }
-.scanner-corners::before, .scanner-corners::after {
-  content: ''; position: absolute;
-  width: 30px; height: 30px; border-color: var(--fnac-yellow); border-style: solid;
-}
-.scanner-corners::before { top: 8px; left: 8px; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
-.scanner-corners::after { bottom: 8px; right: 8px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
-.scanner-icon { font-size: 64px; opacity: 0.15; }
-
-.recent-scans { width: 100%; margin-top: 28px; }
-.scan-item {
-  display: flex; gap: 12px; align-items: center;
-  padding: 12px 16px; background: var(--fnac-card);
-  border-radius: 14px; margin-bottom: 8px;
-  border: 1px solid var(--fnac-border); cursor: pointer;
-  transition: all 0.2s;
-}
-.scan-item:hover { border-color: rgba(245,166,35,0.4); }
-.scan-time { font-size: 10px; color: rgba(255,255,255,0.3); font-family: 'Space Mono', monospace; margin-left: auto; }
-.scan-name { font-size: 13px; font-weight: 600; }
-.scan-result { font-size: 11px; color: var(--fnac-green); }
-
-.scan-btn {
-  width: 100%; padding: 16px; border-radius: 16px;
-  background: var(--fnac-yellow); color: var(--fnac-black);
-  border: none; font-size: 15px; font-weight: 800;
-  font-family: 'Montserrat', sans-serif; cursor: pointer;
-  margin-top: 20px; transition: all 0.2s;
-  letter-spacing: 0.02em;
-}
-.scan-btn:hover { background: #e09520; transform: translateY(-1px); }
-.scan-btn:active { transform: scale(0.98); }
-
-/* ── SAV SCREEN ── */
-.sav-header {
-  padding: 50px 24px 20px;
-}
-.sav-title { font-size: 26px; font-weight: 900; }
-.sav-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
-
-.sav-steps { padding: 0 24px; }
-.sav-step {
-  display: flex; gap: 16px; margin-bottom: 20px; position: relative;
-}
-.sav-step::after {
-  content: ''; position: absolute; left: 21px; top: 44px;
-  width: 2px; height: calc(100% - 10px);
-  background: rgba(245,166,35,0.15);
-}
-.sav-step:last-child::after { display: none; }
-.step-num {
-  width: 44px; height: 44px; border-radius: 14px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 900;
-  background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.3);
-  color: var(--fnac-yellow); z-index: 1;
-}
-.step-num.done { background: var(--fnac-green); color: white; border-color: var(--fnac-green); }
-.step-content { flex: 1; padding-top: 8px; }
-.step-title { font-size: 14px; font-weight: 700; }
-.step-desc { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; line-height: 1.5; }
-
-.sav-form { padding: 0 24px; }
-.form-group { margin-bottom: 16px; }
-.form-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; display: block; }
-.form-select, .form-textarea {
-  width: 100%; padding: 14px 16px;
-  background: var(--fnac-card); border: 1px solid var(--fnac-border);
-  border-radius: 14px; color: var(--fnac-white);
-  font-family: 'Montserrat', sans-serif; font-size: 13px;
-  appearance: none; outline: none; transition: border-color 0.2s;
-}
-.form-select:focus, .form-textarea:focus { border-color: rgba(245,166,35,0.5); }
-.form-textarea { resize: none; height: 90px; }
-.submit-btn {
-  width: 100%; padding: 16px; border-radius: 16px;
-  background: var(--fnac-yellow); color: var(--fnac-black);
-  border: none; font-size: 15px; font-weight: 800;
-  font-family: 'Montserrat', sans-serif; cursor: pointer;
-  margin-top: 8px; transition: all 0.2s;
-}
-.submit-btn:hover { background: #e09520; }
-
-/* ── LOOP SCREEN ── */
-.loop-header {
-  padding: 50px 24px 20px;
-  background: linear-gradient(180deg, rgba(46,204,113,0.06) 0%, transparent 100%);
-}
-.loop-title { font-size: 26px; font-weight: 900; }
-.loop-title span { color: var(--fnac-green); }
-.loop-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
-
-.co2-card {
-  margin: 0 24px 20px;
-  background: linear-gradient(135deg, rgba(46,204,113,0.12) 0%, rgba(46,204,113,0.04) 100%);
-  border: 1px solid rgba(46,204,113,0.25); border-radius: 20px;
-  padding: 20px;
-}
-.co2-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-.co2-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); font-weight: 700; }
-.co2-score { font-size: 36px; font-weight: 900; color: var(--fnac-green); line-height: 1; }
-.co2-unit { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.5); }
-.co2-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
-.co2-fill { height: 100%; background: var(--fnac-green); border-radius: 3px; width: 73%; transition: width 1s; }
-.co2-legend { display: flex; justify-content: space-between; margin-top: 6px; }
-.co2-legend span { font-size: 10px; color: rgba(255,255,255,0.3); font-family: 'Space Mono', monospace; }
-
-.loop-actions { padding: 0 24px; display: flex; flex-direction: column; gap: 10px; }
-.loop-action {
-  background: var(--fnac-card); border-radius: 20px;
-  border: 1px solid var(--fnac-border); padding: 18px;
-  display: flex; gap: 16px; align-items: center;
-  cursor: pointer; transition: all 0.2s;
-}
-.loop-action:hover { border-color: rgba(245,166,35,0.3); transform: translateX(4px); }
-.action-icon {
-  width: 52px; height: 52px; border-radius: 16px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px; flex-shrink: 0;
-}
-.action-repair { background: rgba(245,166,35,0.12); }
-.action-sell { background: rgba(46,204,113,0.12); }
-.action-recycle { background: rgba(52,152,219,0.12); }
-.action-info { flex: 1; }
-.action-title { font-size: 15px; font-weight: 700; }
-.action-desc { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 3px; }
-.action-badge {
-  font-size: 11px; font-weight: 700; padding: 4px 10px;
-  border-radius: 10px; flex-shrink: 0;
-}
-.badge-yellow { background: rgba(245,166,35,0.15); color: var(--fnac-yellow); }
-.badge-green { background: rgba(46,204,113,0.15); color: var(--fnac-green); }
-.badge-blue { background: rgba(52,152,219,0.15); color: #3498DB; }
-
-.points-banner {
-  margin: 16px 24px 0;
-  background: var(--fnac-yellow); border-radius: 16px;
-  padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
-}
-.points-text { font-size: 13px; font-weight: 700; color: var(--fnac-black); }
-.points-num { font-size: 26px; font-weight: 900; color: var(--fnac-black); font-family: 'Space Mono', monospace; }
-
-/* ── PROFILE ── */
-.profile-header {
-  padding: 50px 24px 20px;
-  display: flex; gap: 16px; align-items: center;
-}
-.avatar {
-  width: 72px; height: 72px; border-radius: 22px;
-  background: var(--fnac-yellow); display: flex; align-items: center;
-  justify-content: center; font-size: 28px; font-weight: 900;
-  color: var(--fnac-black); flex-shrink: 0;
-}
-.profile-name { font-size: 20px; font-weight: 800; }
-.profile-email { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 3px; }
-.profile-tier {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: var(--fnac-yellow); color: var(--fnac-black);
-  border-radius: 10px; padding: 3px 10px; font-size: 11px; font-weight: 800;
-  margin-top: 6px; text-transform: uppercase; letter-spacing: 0.06em;
-}
-
-.profile-section { padding: 0 24px; margin-bottom: 20px; }
-.profile-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
-.profile-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 16px; background: var(--fnac-card);
-  border-radius: 14px; margin-bottom: 6px;
-  border: 1px solid var(--fnac-border); cursor: pointer; transition: all 0.2s;
-}
-.profile-item:hover { border-color: rgba(245,166,35,0.3); }
-.profile-item-left { display: flex; gap: 12px; align-items: center; }
-.profile-item-icon { font-size: 18px; width: 36px; text-align: center; }
-.profile-item-label { font-size: 14px; font-weight: 600; }
-.profile-item-value { font-size: 12px; color: rgba(255,255,255,0.4); }
-.profile-item-arrow { color: rgba(255,255,255,0.2); font-size: 14px; }
-
-/* ── PRODUCT DETAIL MODAL ── */
-.modal {
-  position: absolute; inset: 0;
-  background: var(--fnac-black);
-  z-index: 200; display: none;
-  flex-direction: column;
-  animation: slideUp 0.3s ease;
-}
-.modal.active { display: flex; }
-@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-.modal-header {
-  display: flex; align-items: center; gap: 16px;
-  padding: 50px 24px 20px;
-}
-.back-btn {
-  width: 40px; height: 40px; border-radius: 12px;
-  background: var(--fnac-card); border: 1px solid var(--fnac-border);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 16px; color: var(--fnac-white);
-  flex-shrink: 0;
-}
-.modal-title { font-size: 20px; font-weight: 800; }
-.modal-body { flex: 1; overflow-y: auto; padding: 0 24px 100px; scrollbar-width: none; }
-.modal-body::-webkit-scrollbar { display: none; }
-
-.product-hero {
-  background: var(--fnac-card); border-radius: 24px;
-  padding: 28px; display: flex; flex-direction: column;
-  align-items: center; margin-bottom: 20px;
-  border: 1px solid var(--fnac-border);
-}
-.product-hero-icon { font-size: 72px; margin-bottom: 16px; }
-.product-hero-name { font-size: 20px; font-weight: 800; text-align: center; }
-.product-hero-meta { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
-
-.qr-block {
-  background: white; border-radius: 16px;
-  padding: 16px; display: flex; flex-direction: column; align-items: center;
-  margin: 16px 0;
-}
-.qr-code {
-  width: 120px; height: 120px;
-  background: var(--fnac-black);
-  border-radius: 8px; display: grid;
-  grid-template-columns: repeat(7,1fr); gap: 2px; padding: 8px;
-}
-.qr-cell { border-radius: 1px; }
-.qr-on { background: var(--fnac-black); }
-.qr-off { background: transparent; }
-.qr-label { font-size: 10px; color: var(--fnac-black); font-weight: 700; margin-top: 8px; font-family: 'Space Mono', monospace; }
-
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.info-cell {
-  background: var(--fnac-card); border-radius: 14px;
-  padding: 14px; border: 1px solid var(--fnac-border);
-}
-.info-cell-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.3); margin-bottom: 4px; }
-.info-cell-value { font-size: 14px; font-weight: 700; }
-.info-cell-value.yellow { color: var(--fnac-yellow); }
-.info-cell-value.green { color: var(--fnac-green); }
-.info-cell-value.red { color: var(--fnac-red); }
-
-.history-list { display: flex; flex-direction: column; gap: 8px; }
-.history-item {
-  display: flex; gap: 12px; align-items: flex-start;
-  padding: 12px; background: var(--fnac-card); border-radius: 14px;
-  border: 1px solid var(--fnac-border);
-}
-.history-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-.history-dot.yellow { background: var(--fnac-yellow); }
-.history-dot.green { background: var(--fnac-green); }
-.history-dot.gray { background: var(--fnac-gray); }
-.history-date { font-size: 10px; color: rgba(255,255,255,0.3); font-family: 'Space Mono', monospace; }
-.history-event { font-size: 13px; font-weight: 600; }
-
-.action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-.action-btn {
-  padding: 14px; border-radius: 16px; border: none;
-  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
-  cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px;
-  transition: all 0.2s;
-}
-.action-btn-icon { font-size: 24px; }
-.action-btn.primary { background: var(--fnac-yellow); color: var(--fnac-black); }
-.action-btn.secondary { background: var(--fnac-card); color: var(--fnac-white); border: 1px solid var(--fnac-border); }
-.action-btn.danger { background: rgba(231,76,60,0.12); color: var(--fnac-red); border: 1px solid rgba(231,76,60,0.25); }
-.action-btn.success { background: rgba(46,204,113,0.12); color: var(--fnac-green); border: 1px solid rgba(46,204,113,0.25); }
-.action-btn:hover { transform: translateY(-2px); }
-.action-btn:active { transform: scale(0.97); }
-
-/* Toast */
+/* TOAST */
 .toast {
-  position: absolute; bottom: 90px; left: 24px; right: 24px;
-  background: var(--fnac-yellow); color: var(--fnac-black);
-  border-radius: 14px; padding: 14px 18px;
-  font-size: 13px; font-weight: 700; z-index: 500;
+  position: absolute; bottom: 88px; left: 20px; right: 20px;
+  background: var(--yellow); color: var(--black);
+  border-radius: 12px; padding: 12px 16px;
+  font-size: 12px; font-weight: 700; z-index: 500;
   transform: translateY(20px); opacity: 0;
   transition: all 0.3s;
-  display: flex; align-items: center; gap: 10px;
 }
 .toast.show { transform: translateY(0); opacity: 1; }
 
-/* ── SMALL UTILITIES ── */
-.spacer { height: 16px; }
-.pb-nav { padding-bottom: 90px; }
-.chip {
-  display: inline-block; padding: 4px 10px; border-radius: 8px;
-  font-size: 10px; font-weight: 700; background: rgba(245,166,35,0.12);
-  color: var(--fnac-yellow); margin-right: 4px; margin-top: 4px;
+/* REFRESH BTN */
+.refresh-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin: 0 20px 12px;
+  padding: 12px; border-radius: 14px;
+  background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.2);
+  cursor: pointer; font-size: 12px; font-weight: 700; color: var(--yellow);
+  transition: all 0.2s;
 }
+.refresh-btn:hover { background: rgba(245,166,35,0.15); }
+.refresh-icon { font-size: 14px; }
 </style>
 </head>
 <body>
 
-<!-- SPLASH -->
-<div id="splash">
-  <div class="splash-logo">fnac<span>pass</span></div>
-  <div class="splash-sub">Ton produit a une vie</div>
-  <div class="splash-bar"><div class="splash-bar-fill"></div></div>
-</div>
-
-<!-- APP -->
-<div class="app-wrapper">
 <div class="phone">
-
   <div class="notch"></div>
   <div class="status-bar">
     <span>09:41</span>
     <span>⚡ 87%</span>
   </div>
 
-  <!-- ════════════════ HOME ════════════════ -->
-  <div class="screen active" id="screen-home">
-    <div class="home-header">
-      <div class="home-greeting">Bonjour 👋</div>
-      <div class="home-name">Maellys <span>Dupont</span></div>
-      <div class="passport-badge">
-        <div class="badge-dot"></div>
-        Fnac+ Max · 3 produits actifs
+  <div class="screen">
+
+    <!-- HEADER -->
+    <div class="store-header">
+      <div class="back-row">
+        <div class="back-btn">‹</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;text-transform:uppercase;letter-spacing:.1em">FnacPass</div>
+      </div>
+      <div class="header-title">Store <span>Live</span></div>
+      <div class="header-sub">Infos en temps réel — Fnac Montpellier</div>
+    </div>
+
+    <!-- STORE SELECTOR -->
+    <div class="store-selector">
+      <div class="selector-label">Choisir un magasin</div>
+      <div class="store-scroll">
+        <div class="store-chip active" onclick="selectStore(this, 'Montpellier')">📍 Montpellier</div>
+        <div class="store-chip" onclick="selectStore(this, 'Lattes')">Lattes</div>
+        <div class="store-chip" onclick="selectStore(this, 'Odysseum')">Odysseum</div>
+        <div class="store-chip" onclick="selectStore(this, 'Lyon Part-Dieu')">Lyon Part-Dieu</div>
+        <div class="store-chip" onclick="selectStore(this, 'Marseille')">Marseille</div>
+        <div class="store-chip" onclick="selectStore(this, 'Paris Châtelet')">Paris Châtelet</div>
       </div>
     </div>
 
-    <div class="stat-row">
-      <div class="stat-card">
-        <div class="stat-num">3</div>
-        <div class="stat-label">Produits</div>
+    <!-- LIVE BANNER -->
+    <div class="live-banner">
+      <div class="live-dot"></div>
+      <div class="live-text">
+        <div class="live-title">Fnac Montpellier — Place de la Comédie</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5)">Ouvert · Ferme à 20h00 · 580 m²</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-num">142</div>
-        <div class="stat-label">Loop pts</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">A+</div>
-        <div class="stat-label">Score CO₂</div>
-      </div>
+      <div class="live-time" id="livetime">09:41</div>
     </div>
 
-    <div class="alert-banner">
-      <div class="alert-icon">⚠️</div>
-      <div class="alert-text">
-        <div class="alert-title">Garantie bientôt expirée</div>
-        Ton iPhone 12 Pro — garantie expire dans 18 jours. Pense à la renouveler !
-      </div>
+    <!-- AFFLUENCE -->
+    <div style="padding:0 20px 6px">
+      <div class="sec-label">Affluence actuelle</div>
     </div>
-
-    <div class="section-title">Mes Passports</div>
-    <div class="product-list pb-nav">
-      <div class="product-card" onclick="openProduct('iphone')">
-        <div class="product-icon">📱</div>
-        <div class="product-info">
-          <div class="product-name">iPhone 12 Pro</div>
-          <div class="product-meta">Acheté le 15 mars 2022 · Fnac Montpellier</div>
-          <div class="product-status status-warn">⚠ Garantie bientôt expirée</div>
+    <div class="affluence-card">
+      <div class="aff-header">
+        <div class="aff-title">Fréquentation magasin</div>
+        <div class="aff-badge badge-green" id="aff-badge">Peu de monde</div>
+      </div>
+      <div class="crowd-visual" id="crowd-bars"></div>
+      <div class="crowd-labels">
+        <span>9h</span><span>10h</span><span>11h</span><span>12h</span><span>13h</span><span>14h</span><span>15h</span><span>16h</span><span>17h</span><span>18h</span><span>19h</span><span>20h</span>
+      </div>
+      <div class="crowd-now">
+        <div class="crowd-stat">
+          <div class="crowd-num" id="crowd-count">87</div>
+          <div class="crowd-lbl">Personnes</div>
         </div>
-        <div class="product-arrow">›</div>
-      </div>
-      <div class="product-card green" onclick="openProduct('mac')">
-        <div class="product-icon">💻</div>
-        <div class="product-info">
-          <div class="product-name">MacBook Air M2</div>
-          <div class="product-meta">Reconditionné · 08 jan. 2025 · Fnac.com</div>
-          <div class="product-status status-ok">✓ Passport actif — Garantie 2 ans</div>
+        <div style="width:1px;height:32px;background:rgba(255,255,255,0.06)"></div>
+        <div class="crowd-stat">
+          <div class="crowd-num" style="color:var(--green)">26%</div>
+          <div class="crowd-lbl">Capacité</div>
         </div>
-        <div class="product-arrow">›</div>
-      </div>
-      <div class="product-card red" onclick="openProduct('tv')">
-        <div class="product-icon">📺</div>
-        <div class="product-info">
-          <div class="product-name">TV Samsung 55" QLED</div>
-          <div class="product-meta">Acheté le 02 déc. 2020 · Darty</div>
-          <div class="product-status status-bad">✕ SAV en cours — Ticket #48291</div>
+        <div style="width:1px;height:32px;background:rgba(255,255,255,0.06)"></div>
+        <div class="crowd-stat">
+          <div class="crowd-num" style="color:rgba(255,255,255,0.5);font-size:14px">↓18%</div>
+          <div class="crowd-lbl">vs hier</div>
         </div>
-        <div class="product-arrow">›</div>
       </div>
     </div>
-  </div>
 
-  <!-- ════════════════ SCANNER ════════════════ -->
-  <div class="screen" id="screen-scan">
-    <div class="scanner-screen">
-      <div class="scanner-title">Scanner un QR</div>
-      <div class="scanner-sub">Scanne le QR code de ton produit<br>pour accéder à son Passport</div>
-      <div class="scanner-frame">
-        <div class="scanner-line"></div>
-        <div class="scanner-corners"></div>
-        <div class="scanner-icon">⬛</div>
+    <!-- ATTENTE -->
+    <div style="padding:0 20px 6px">
+      <div class="sec-label">Temps d'attente</div>
+    </div>
+    <div class="wait-grid">
+      <div class="wait-card">
+        <div class="wait-icon">🛒</div>
+        <div class="wait-title">Caisses</div>
+        <div class="wait-time green" id="caisse-time">3 min</div>
+        <div class="wait-sub">2 caisses ouvertes</div>
+        <div class="wait-bar"><div class="wait-fill" style="width:20%;background:var(--green)"></div></div>
       </div>
-      <button class="scan-btn" onclick="simulateScan()">📷 Simuler un scan</button>
-      <div class="recent-scans">
-        <div class="section-title" style="padding:0 0 10px">Scans récents</div>
-        <div class="scan-item" onclick="openProduct('iphone')">
-          <span style="font-size:20px">📱</span>
-          <div>
-            <div class="scan-name">iPhone 12 Pro</div>
-            <div class="scan-result">✓ Passport activé</div>
+      <div class="wait-card">
+        <div class="wait-icon">🔧</div>
+        <div class="wait-title">SAV / Accueil</div>
+        <div class="wait-time orange" id="sav-time">12 min</div>
+        <div class="wait-sub">1 agent disponible</div>
+        <div class="wait-bar"><div class="wait-fill" style="width:55%;background:var(--orange)"></div></div>
+      </div>
+      <div class="wait-card">
+        <div class="wait-icon">🖥️</div>
+        <div class="wait-title">Retrait commande</div>
+        <div class="wait-time green" id="retrait-time">2 min</div>
+        <div class="wait-sub">Borne libre</div>
+        <div class="wait-bar"><div class="wait-fill" style="width:10%;background:var(--green)"></div></div>
+      </div>
+      <div class="wait-card">
+        <div class="wait-icon">🎯</div>
+        <div class="wait-title">Conseil Expert</div>
+        <div class="wait-time orange" id="conseil-time">8 min</div>
+        <div class="wait-sub">Sur rendez-vous</div>
+        <div class="wait-bar"><div class="wait-fill" style="width:40%;background:var(--orange)"></div></div>
+      </div>
+    </div>
+
+    <!-- HEATMAP HORAIRE -->
+    <div style="padding:0 20px 6px">
+      <div class="sec-label">Meilleurs moments pour visiter</div>
+    </div>
+    <div class="heatmap-card">
+      <div class="heatmap-title">Affluence prévue aujourd'hui</div>
+      <div class="heatmap-grid" id="heatmap"></div>
+      <div class="hmap-labels">
+        <span>9h</span><span>10h</span><span>11h</span><span>12h</span><span>13h</span><span>14h</span><span>15h</span><span>16h</span><span>17h</span><span>18h</span><span>19h</span><span>20h</span>
+      </div>
+      <div class="hmap-legend">
+        <div class="hmap-leg-label">Calme</div>
+        <div class="hmap-leg-dots">
+          <div class="hmap-leg-dot" style="background:rgba(46,204,113,0.2)"></div>
+          <div class="hmap-leg-dot" style="background:rgba(245,166,35,0.3)"></div>
+          <div class="hmap-leg-dot" style="background:rgba(245,166,35,0.6)"></div>
+          <div class="hmap-leg-dot" style="background:rgba(231,76,60,0.5)"></div>
+          <div class="hmap-leg-dot" style="background:rgba(231,76,60,0.9)"></div>
+        </div>
+        <div class="hmap-leg-label">Chargé</div>
+      </div>
+    </div>
+
+    <!-- VENDEURS DISPONIBLES -->
+    <div style="padding:0 20px 6px">
+      <div class="sec-label">Vendeurs disponibles</div>
+    </div>
+    <div class="vendeurs-card">
+      <div class="vendeurs-header">
+        <div class="vendeurs-title">Équipe en magasin</div>
+        <div class="vendeurs-count">6 présents</div>
+      </div>
+      <div class="vendeur-row" onclick="showToast('📲 Antoine vous attend en rayon Photo — arrivez dans 5 min !')">
+        <div class="vendeur-avatar" style="background:rgba(52,152,219,0.15);color:var(--blue)">A</div>
+        <div class="vendeur-info">
+          <div class="vendeur-name">Antoine R.</div>
+          <div class="vendeur-rayon">📸 Photo · Vidéo · Audio</div>
+        </div>
+        <div class="vendeur-status">
+          <div class="status-dot-row">
+            <div class="sdot sdot-green"></div>
+            <span style="font-size:11px;font-weight:600;color:var(--green)">Disponible</span>
           </div>
-          <div class="scan-time">Hier 14:22</div>
+          <div class="wait-tag">Passport certifié ⭐</div>
         </div>
-        <div class="scan-item" onclick="openProduct('mac')">
-          <span style="font-size:20px">💻</span>
-          <div>
-            <div class="scan-name">MacBook Air M2</div>
-            <div class="scan-result">✓ Garantie vérifiée</div>
+      </div>
+      <div class="vendeur-row" onclick="showToast('⏳ Sarah est avec un client — attente estimée 8 min')">
+        <div class="vendeur-avatar" style="background:rgba(155,89,182,0.15);color:#9B59B6">S</div>
+        <div class="vendeur-info">
+          <div class="vendeur-name">Sarah M.</div>
+          <div class="vendeur-rayon">💻 Informatique · Tablettes</div>
+        </div>
+        <div class="vendeur-status">
+          <div class="status-dot-row">
+            <div class="sdot sdot-orange"></div>
+            <span style="font-size:11px;font-weight:600;color:var(--orange)">Avec client</span>
           </div>
-          <div class="scan-time">08/01 10:15</div>
+          <div class="wait-tag">~8 min</div>
+        </div>
+      </div>
+      <div class="vendeur-row" onclick="showToast('📚 Marc est libre ! Rayon Livres & Culture — 2ème étage')">
+        <div class="vendeur-avatar" style="background:rgba(46,204,113,0.12);color:var(--green)">M</div>
+        <div class="vendeur-info">
+          <div class="vendeur-name">Marc D.</div>
+          <div class="vendeur-rayon">📚 Livres · Vinyles · Culture</div>
+        </div>
+        <div class="vendeur-status">
+          <div class="status-dot-row">
+            <div class="sdot sdot-green"></div>
+            <span style="font-size:11px;font-weight:600;color:var(--green)">Disponible</span>
+          </div>
+          <div class="wait-tag">Passport certifié ⭐</div>
+        </div>
+      </div>
+      <div class="vendeur-row" onclick="showToast('📺 Lucie est en pause — retour dans 15 min')">
+        <div class="vendeur-avatar" style="background:rgba(231,76,60,0.12);color:var(--red)">L</div>
+        <div class="vendeur-info">
+          <div class="vendeur-name">Lucie B.</div>
+          <div class="vendeur-rayon">📺 TV · Son · Électronique</div>
+        </div>
+        <div class="vendeur-status">
+          <div class="status-dot-row">
+            <div class="sdot sdot-red"></div>
+            <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4)">En pause</span>
+          </div>
+          <div class="wait-tag">~15 min</div>
+        </div>
+      </div>
+      <div class="vendeur-row" onclick="showToast('🎮 Kevin est disponible — rayon Gaming 1er étage !')">
+        <div class="vendeur-avatar" style="background:rgba(245,166,35,0.12);color:var(--yellow)">K</div>
+        <div class="vendeur-info">
+          <div class="vendeur-name">Kevin T.</div>
+          <div class="vendeur-rayon">🎮 Gaming · Jeux · Consoles</div>
+        </div>
+        <div class="vendeur-status">
+          <div class="status-dot-row">
+            <div class="sdot sdot-green"></div>
+            <span style="font-size:11px;font-weight:600;color:var(--green)">Disponible</span>
+          </div>
+          <div class="wait-tag">Passport certifié ⭐</div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ════════════════ SAV ════════════════ -->
-  <div class="screen" id="screen-sav">
-    <div class="sav-header">
-      <div class="sav-title">SAV Simplifié</div>
-      <div class="sav-sub">Diagnostic rapide en 3 étapes</div>
+    <!-- STOCK EN MAGASIN -->
+    <div style="padding:0 20px 6px">
+      <div class="sec-label">Stock en magasin</div>
     </div>
-
-    <div class="sav-steps">
-      <div class="sav-step">
-        <div class="step-num done">✓</div>
-        <div class="step-content">
-          <div class="step-title">Identification produit</div>
-          <div class="step-desc">TV Samsung 55" QLED — Ticket #48291<br>Scanné le 28/03/2026</div>
-        </div>
+    <div class="stock-card">
+      <div class="stock-header">
+        <div class="stock-title">Disponibilité produits</div>
+        <div class="aff-badge badge-green">Mis à jour</div>
       </div>
-      <div class="sav-step">
-        <div class="step-num done">✓</div>
-        <div class="step-content">
-          <div class="step-title">Diagnostic automatique</div>
-          <div class="step-desc">Problème d'écran détecté — Panne matérielle probable. Historique Passport consulté.</div>
-        </div>
+      <div class="stock-search">
+        <span style="font-size:14px;opacity:.4">🔍</span>
+        <input type="text" placeholder="Rechercher un produit..." id="stock-input" oninput="filterStock(this.value)">
       </div>
-      <div class="sav-step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <div class="step-title">Prise en charge</div>
-          <div class="step-desc">Complète le formulaire pour planifier la réparation en magasin.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sav-form">
-      <div class="form-group">
-        <label class="form-label">Type de problème</label>
-        <select class="form-select">
-          <option>Écran — Problème d'affichage</option>
-          <option>Son — Pas de son</option>
-          <option>Alimentation — Ne s'allume pas</option>
-          <option>Télécommande — Non fonctionnelle</option>
-          <option>Autre panne</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Magasin de dépôt</label>
-        <select class="form-select">
-          <option>Fnac Montpellier — Place de la Comédie</option>
-          <option>Fnac Lattes — Grand Sud</option>
-          <option>Darty Montpellier Centre</option>
-          <option>Envoi postal</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Description (optionnel)</label>
-        <textarea class="form-textarea" placeholder="Décris le problème en quelques mots..."></textarea>
-      </div>
-      <button class="submit-btn" onclick="showToast('✓ Demande SAV envoyée ! RDV confirmé par email.')">
-        Soumettre la demande SAV
-      </button>
-    </div>
-    <div class="spacer"></div>
-  </div>
-
-  <!-- ════════════════ LOOP ════════════════ -->
-  <div class="screen" id="screen-loop">
-    <div class="loop-header">
-      <div class="loop-title">Fnac <span>Loop</span></div>
-      <div class="loop-sub">Donne une seconde vie à tes produits</div>
-    </div>
-
-    <div class="co2-card">
-      <div class="co2-header">
-        <div>
-          <div class="co2-label">Ton impact CO₂ évité</div>
-          <div class="co2-score">147 <span class="co2-unit">kg CO₂</span></div>
-        </div>
-        <div style="font-size:36px">🌱</div>
-      </div>
-      <div class="co2-bar"><div class="co2-fill"></div></div>
-      <div class="co2-legend"><span>0 kg</span><span>Objectif 200 kg</span></div>
-    </div>
-
-    <div class="section-title">Que faire de ton iPhone 12 Pro ?</div>
-    <div class="loop-actions">
-      <div class="loop-action" onclick="showToast('🔧 Réservation atelier réparation confirmée !')">
-        <div class="action-icon action-repair">🔧</div>
-        <div class="action-info">
-          <div class="action-title">Réparer</div>
-          <div class="action-desc">Batterie à 72% — Remplacement recommandé. 49€ en atelier Fnac.</div>
-        </div>
-        <div class="action-badge badge-yellow">49€</div>
-      </div>
-      <div class="loop-action" onclick="showToast('💰 Estimation de reprise : 180€ de crédit Fnac !')">
-        <div class="action-icon action-sell">💰</div>
-        <div class="action-info">
-          <div class="action-title">Revendre à Fnac</div>
-          <div class="action-desc">Reprise immédiate en magasin. Crédit sur ton prochain achat.</div>
-        </div>
-        <div class="action-badge badge-green">~180€</div>
-      </div>
-      <div class="loop-action" onclick="showToast('♻️ Bac de collecte disponible en magasin. Merci !')">
-        <div class="action-icon action-recycle">♻️</div>
-        <div class="action-info">
-          <div class="action-title">Recycler</div>
-          <div class="action-desc">Dépôt gratuit en magasin. +20 points Loop offerts.</div>
-        </div>
-        <div class="action-badge badge-blue">+20 pts</div>
-      </div>
-    </div>
-
-    <div class="points-banner" style="margin-bottom:24px">
-      <div>
-        <div class="points-text">Tes points Loop</div>
-        <div style="font-size:11px;color:rgba(26,26,26,0.6);font-weight:600">Cumulés depuis jan. 2024</div>
-      </div>
-      <div class="points-num">142 pts</div>
-    </div>
-  </div>
-
-  <!-- ════════════════ PROFIL ════════════════ -->
-  <div class="screen" id="screen-profile">
-    <div class="profile-header">
-      <div class="avatar">M</div>
-      <div>
-        <div class="profile-name">Maellys Dupont</div>
-        <div class="profile-email">maellys.dupont@email.fr</div>
-        <div class="profile-tier">⭐ Fnac+ Max</div>
-      </div>
-    </div>
-
-    <div class="profile-section">
-      <div class="profile-section-title">Mon abonnement</div>
-      <div class="profile-item" onclick="showToast('✓ Abonnement Fnac+ Max actif — renouvellement le 01/05/2026')">
-        <div class="profile-item-left">
-          <div class="profile-item-icon">⭐</div>
-          <div>
-            <div class="profile-item-label">Fnac+ Max</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.4)">Réparations illimitées · Score CO₂ · Conseiller dédié</div>
+      <div id="stock-list">
+        <div class="stock-item" onclick="showToast('📱 iPhone 16 Pro — 4 unités en rayon. Emplacement : Zone Tech A3')">
+          <div class="stock-icon">📱</div>
+          <div class="stock-info">
+            <div class="stock-name">iPhone 16 Pro 128Go</div>
+            <div class="stock-ref">REF-IP16P-128-TIT</div>
+          </div>
+          <div class="stock-qty">
+            <div class="stock-num plenty">4</div>
+            <div class="stock-label">en rayon</div>
           </div>
         </div>
-        <div class="profile-item-value">29,99€/mois</div>
-      </div>
-    </div>
-
-    <div class="profile-section">
-      <div class="profile-section-title">Mon compte</div>
-      <div class="profile-item" onclick="showToast('3 produits actifs dans ton Passport')">
-        <div class="profile-item-left">
-          <div class="profile-item-icon">📦</div>
-          <div class="profile-item-label">Mes Passports</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="profile-item-value">3 actifs</div>
-          <div class="profile-item-arrow">›</div>
-        </div>
-      </div>
-      <div class="profile-item" onclick="showToast('142 points Loop disponibles !')">
-        <div class="profile-item-left">
-          <div class="profile-item-icon">🌱</div>
-          <div class="profile-item-label">Points Loop</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="profile-item-value" style="color:var(--fnac-green)">142 pts</div>
-          <div class="profile-item-arrow">›</div>
-        </div>
-      </div>
-      <div class="profile-item" onclick="showToast('Score CO₂ : A+ — Tu as évité 147 kg de CO₂ !')">
-        <div class="profile-item-left">
-          <div class="profile-item-icon">🌍</div>
-          <div class="profile-item-label">Impact environnemental</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="profile-item-value" style="color:var(--fnac-green)">A+ · 147 kg CO₂</div>
-          <div class="profile-item-arrow">›</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="profile-section">
-      <div class="profile-section-title">Historique</div>
-      <div class="profile-item">
-        <div class="profile-item-left">
-          <div class="profile-item-icon">🔧</div>
-          <div>
-            <div class="profile-item-label">SAV en cours</div>
-            <div style="font-size:11px;color:var(--fnac-red)">TV Samsung — Ticket #48291</div>
+        <div class="stock-item" onclick="showToast('💻 MacBook Air M3 — 2 unités restantes. Zone Info B1')">
+          <div class="stock-icon">💻</div>
+          <div class="stock-info">
+            <div class="stock-name">MacBook Air M3 256Go</div>
+            <div class="stock-ref">REF-MBA-M3-256-SL</div>
+          </div>
+          <div class="stock-qty">
+            <div class="stock-num low">2</div>
+            <div class="stock-label">restants</div>
           </div>
         </div>
-        <div class="profile-item-arrow">›</div>
-      </div>
-      <div class="profile-item">
-        <div class="profile-item-left">
-          <div class="profile-item-icon">🔔</div>
-          <div class="profile-item-label">Notifications</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="profile-item-value">Activées</div>
-          <div class="profile-item-arrow">›</div>
-        </div>
-      </div>
-    </div>
-    <div class="spacer"></div>
-  </div>
-
-  <!-- ════════════════ MODAL PRODUIT ════════════════ -->
-  <div class="modal" id="modal-iphone">
-    <div class="modal-header">
-      <div class="back-btn" onclick="closeModal('modal-iphone')">‹</div>
-      <div class="modal-title">iPhone 12 Pro</div>
-    </div>
-    <div class="modal-body">
-      <div class="product-hero">
-        <div class="product-hero-icon">📱</div>
-        <div class="product-hero-name">iPhone 12 Pro</div>
-        <div class="product-hero-meta">Apple · 128 Go · Graphite · Neuf</div>
-        <div class="qr-block">
-          <div class="qr-code" id="qr1"></div>
-          <div class="qr-label">FP-2022-0315-IP12P</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px">
-          <span class="chip">Passport actif</span>
-          <span class="chip">SAV simplifié</span>
-          <span class="chip">Loop éligible</span>
-        </div>
-      </div>
-
-      <div class="info-grid">
-        <div class="info-cell">
-          <div class="info-cell-label">Date d'achat</div>
-          <div class="info-cell-value">15 mars 2022</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Garantie</div>
-          <div class="info-cell-value red">18 jours restants</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Magasin</div>
-          <div class="info-cell-value">Fnac Montpellier</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Score CO₂</div>
-          <div class="info-cell-value green">A+ · –12 kg</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Batterie</div>
-          <div class="info-cell-value yellow">72% capacité</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">État</div>
-          <div class="info-cell-value green">Bon état</div>
-        </div>
-      </div>
-
-      <div class="section-title" style="padding-left:0">Historique Passport</div>
-      <div class="history-list" style="margin-bottom:16px">
-        <div class="history-item">
-          <div class="history-dot yellow"></div>
-          <div>
-            <div class="history-date">28 mars 2026</div>
-            <div class="history-event">⚠️ Alerte garantie — Expire dans 18 jours</div>
+        <div class="stock-item" onclick="showToast('🎧 Sony WH-1000XM5 — Rupture en magasin. Disponible sur Fnac.com J+1')">
+          <div class="stock-icon">🎧</div>
+          <div class="stock-info">
+            <div class="stock-name">Sony WH-1000XM5</div>
+            <div class="stock-ref">REF-SONY-WH5-BLK</div>
+          </div>
+          <div class="stock-qty">
+            <div class="stock-num none">0</div>
+            <div class="stock-label">rupture</div>
           </div>
         </div>
-        <div class="history-item">
-          <div class="history-dot green"></div>
-          <div>
-            <div class="history-date">12 jan. 2025</div>
-            <div class="history-event">🔧 Remplacement batterie — Atelier Fnac</div>
+        <div class="stock-item" onclick="showToast('📺 Samsung 55 QLED — 3 unités en vitrine. Zone TV C2')">
+          <div class="stock-icon">📺</div>
+          <div class="stock-info">
+            <div class="stock-name">Samsung 55" QLED 4K</div>
+            <div class="stock-ref">REF-SAM-55Q-2025</div>
+          </div>
+          <div class="stock-qty">
+            <div class="stock-num plenty">3</div>
+            <div class="stock-label">en vitrine</div>
           </div>
         </div>
-        <div class="history-item">
-          <div class="history-dot green"></div>
-          <div>
-            <div class="history-date">15 mars 2022</div>
-            <div class="history-event">✓ Passport activé — Achat en magasin</div>
+        <div class="stock-item" onclick="showToast('🎮 PS5 Standard — 1 unité. Dernière ! Zone Gaming D4')">
+          <div class="stock-icon">🎮</div>
+          <div class="stock-info">
+            <div class="stock-name">PlayStation 5 Standard</div>
+            <div class="stock-ref">REF-PS5-STD-2024</div>
+          </div>
+          <div class="stock-qty">
+            <div class="stock-num low">1</div>
+            <div class="stock-label">dernière</div>
+          </div>
+        </div>
+        <div class="stock-item" onclick="showToast('📷 Fujifilm X100VI — 6 unités en stock. Zone Photo A1')">
+          <div class="stock-icon">📷</div>
+          <div class="stock-info">
+            <div class="stock-name">Fujifilm X100VI</div>
+            <div class="stock-ref">REF-FUJI-X100VI-BK</div>
+          </div>
+          <div class="stock-qty">
+            <div class="stock-num plenty">6</div>
+            <div class="stock-label">en stock</div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="action-buttons">
-        <button class="action-btn primary" onclick="showToast('✓ Garantie renouvelée — Fnac+ Max activé !')">
-          <div class="action-btn-icon">🛡️</div>
-          Renouveler garantie
-        </button>
-        <button class="action-btn success" onclick="closeModal('modal-iphone');switchScreen('screen-loop');showToast('🌱 Programme Loop : 3 options disponibles')">
-          <div class="action-btn-icon">🌱</div>
-          Fnac Loop
-        </button>
-        <button class="action-btn secondary" onclick="closeModal('modal-iphone');switchScreen('screen-sav')">
-          <div class="action-btn-icon">🔧</div>
-          SAV rapide
-        </button>
-        <button class="action-btn danger" onclick="showToast('📋 Rapport d\'état généré et envoyé par email !')">
-          <div class="action-btn-icon">📋</div>
-          Rapport état
-        </button>
+    <!-- SERVICES DISPONIBLES -->
+    <div style="padding:0 20px 6px">
+      <div class="sec-label">Services disponibles maintenant</div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card" onclick="showToast('🔧 Atelier réparation ouvert ! 2 techniciens disponibles — sans RDV')">
+        <div class="service-icon">🔧</div>
+        <div class="service-name">Atelier Réparation</div>
+        <div class="service-info">Écran, batterie, diagnostics</div>
+        <div class="service-status-row">
+          <div class="sdot sdot-green"></div>
+          <div class="service-status" style="color:var(--green)">Ouvert · 0 min</div>
+        </div>
+      </div>
+      <div class="service-card" onclick="showToast('📦 Zone retrait click & collect libre — présentez votre QR de commande')">
+        <div class="service-icon">📦</div>
+        <div class="service-name">Click & Collect</div>
+        <div class="service-info">Retrait de commande</div>
+        <div class="service-status-row">
+          <div class="sdot sdot-green"></div>
+          <div class="service-status" style="color:var(--green)">Libre · 2 min</div>
+        </div>
+      </div>
+      <div class="service-card" onclick="showToast('♻️ Bac de collecte disponible — apportez votre produit en caisse SAV')">
+        <div class="service-icon">♻️</div>
+        <div class="service-name">Fnac Loop</div>
+        <div class="service-info">Reprise & recyclage</div>
+        <div class="service-status-row">
+          <div class="sdot sdot-green"></div>
+          <div class="service-status" style="color:var(--green)">Disponible</div>
+        </div>
+      </div>
+      <div class="service-card" onclick="showToast('🎧 Zone test audio disponible — casques et enceintes à tester librement')">
+        <div class="service-icon">🎧</div>
+        <div class="service-name">Zone Écoute</div>
+        <div class="service-info">Test audio & hi-fi</div>
+        <div class="service-status-row">
+          <div class="sdot sdot-orange"></div>
+          <div class="service-status" style="color:var(--orange)">1 place libre</div>
+        </div>
+      </div>
+      <div class="service-card" onclick="showToast('💳 Prendre un RDV Fnac+ Max avec un conseiller dédié ce matin !')">
+        <div class="service-icon">⭐</div>
+        <div class="service-name">Conseiller Fnac+</div>
+        <div class="service-info">Abonnement Max dédié</div>
+        <div class="service-status-row">
+          <div class="sdot sdot-green"></div>
+          <div class="service-status" style="color:var(--green)">RDV dispo</div>
+        </div>
+      </div>
+      <div class="service-card" onclick="showToast('🎮 Démonstrations PS5 Pro et Xbox toutes les 30 min en rayon Gaming')">
+        <div class="service-icon">🎮</div>
+        <div class="service-name">Démo Gaming</div>
+        <div class="service-info">PS5 Pro & Xbox live</div>
+        <div class="service-status-row">
+          <div class="sdot sdot-orange"></div>
+          <div class="service-status" style="color:var(--orange)">Dans 12 min</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="modal" id="modal-mac">
-    <div class="modal-header">
-      <div class="back-btn" onclick="closeModal('modal-mac')">‹</div>
-      <div class="modal-title">MacBook Air M2</div>
+    <!-- REFRESH -->
+    <div class="refresh-btn" onclick="refreshData()">
+      <div class="refresh-icon" id="refresh-icon">↻</div>
+      Actualiser les données
     </div>
-    <div class="modal-body">
-      <div class="product-hero">
-        <div class="product-hero-icon">💻</div>
-        <div class="product-hero-name">MacBook Air M2</div>
-        <div class="product-hero-meta">Apple · 8 Go RAM · 256 Go SSD · Reconditionné</div>
-        <div class="qr-block">
-          <div class="qr-code" id="qr2"></div>
-          <div class="qr-label">FP-2025-0108-MBA-M2</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px">
-          <span class="chip" style="background:rgba(46,204,113,0.15);color:var(--fnac-green)">Reconditionné</span>
-          <span class="chip">Passport actif</span>
-          <span class="chip">CO₂ A+</span>
-        </div>
-      </div>
 
-      <div class="info-grid">
-        <div class="info-cell">
-          <div class="info-cell-label">Date d'achat</div>
-          <div class="info-cell-value">08 jan. 2025</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Garantie</div>
-          <div class="info-cell-value green">~2 ans restants</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Source</div>
-          <div class="info-cell-value">Fnac.com</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Score CO₂</div>
-          <div class="info-cell-value green">A+ · –95 kg</div>
-        </div>
-      </div>
+  </div><!-- end screen -->
 
-      <div class="section-title" style="padding-left:0">Historique Passport</div>
-      <div class="history-list" style="margin-bottom:16px">
-        <div class="history-item">
-          <div class="history-dot green"></div>
-          <div>
-            <div class="history-date">08 jan. 2025</div>
-            <div class="history-event">✓ Passport activé — Achat reconditionné Fnac.com</div>
-          </div>
-        </div>
-        <div class="history-item">
-          <div class="history-dot gray"></div>
-          <div>
-            <div class="history-date">Avant 2025</div>
-            <div class="history-event">📦 Ancien propriétaire — produit remis à neuf</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="action-buttons">
-        <button class="action-btn primary" onclick="showToast('✓ Tout va bien ! Garantie valide jusqu\'en jan. 2027')">
-          <div class="action-btn-icon">✓</div>
-          Vérifier état
-        </button>
-        <button class="action-btn secondary" onclick="showToast('📚 Guide d\'utilisation M2 envoyé sur ton email !')">
-          <div class="action-btn-icon">📚</div>
-          Tutoriels
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="modal-tv">
-    <div class="modal-header">
-      <div class="back-btn" onclick="closeModal('modal-tv')">‹</div>
-      <div class="modal-title">TV Samsung 55" QLED</div>
-    </div>
-    <div class="modal-body">
-      <div class="product-hero">
-        <div class="product-hero-icon">📺</div>
-        <div class="product-hero-name">TV Samsung 55" QLED</div>
-        <div class="product-hero-meta">Samsung · 55 pouces · 4K QLED · Neuf</div>
-        <div class="qr-block">
-          <div class="qr-code" id="qr3"></div>
-          <div class="qr-label">FP-2020-1202-SAM55Q</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px">
-          <span class="chip" style="background:rgba(231,76,60,0.12);color:var(--fnac-red)">SAV en cours</span>
-          <span class="chip">Ticket #48291</span>
-        </div>
-      </div>
-
-      <div class="alert-banner" style="margin:0 0 16px">
-        <div class="alert-icon">🔧</div>
-        <div class="alert-text">
-          <div class="alert-title">SAV en cours — Ticket #48291</div>
-          Prise en charge le 25/03/2026. Pièce commandée. Délai estimé : 5-7 jours ouvrés.
-        </div>
-      </div>
-
-      <div class="info-grid">
-        <div class="info-cell">
-          <div class="info-cell-label">Date d'achat</div>
-          <div class="info-cell-value">02 déc. 2020</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Garantie</div>
-          <div class="info-cell-value red">Expirée</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Magasin</div>
-          <div class="info-cell-value">Darty</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-cell-label">Âge</div>
-          <div class="info-cell-value yellow">5 ans</div>
-        </div>
-      </div>
-
-      <div class="section-title" style="padding-left:0">Suivi SAV</div>
-      <div class="history-list" style="margin-bottom:16px">
-        <div class="history-item">
-          <div class="history-dot yellow"></div>
-          <div>
-            <div class="history-date">28 mars 2026</div>
-            <div class="history-event">⏳ Pièce commandée — Livraison sous 5 jours</div>
-          </div>
-        </div>
-        <div class="history-item">
-          <div class="history-dot green"></div>
-          <div>
-            <div class="history-date">25 mars 2026</div>
-            <div class="history-event">✓ Diagnostic effectué — Problème écran confirmé</div>
-          </div>
-        </div>
-        <div class="history-item">
-          <div class="history-dot gray"></div>
-          <div>
-            <div class="history-date">24 mars 2026</div>
-            <div class="history-event">📥 Dépôt en magasin — Fnac Montpellier</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="action-buttons">
-        <button class="action-btn secondary" onclick="showToast('📲 Notification activée — Tu seras alerté dès la réparation terminée !')">
-          <div class="action-btn-icon">🔔</div>
-          Suivre le SAV
-        </button>
-        <button class="action-btn success" onclick="showToast('♻️ Option Loop disponible après réparation')">
-          <div class="action-btn-icon">🌱</div>
-          Préparer Loop
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div class="toast" id="toast">
-    <span id="toast-icon">✓</span>
-    <span id="toast-text">Action effectuée</span>
-  </div>
-
-  <!-- Bottom Nav -->
+  <!-- BOTTOM NAV -->
   <div class="bottom-nav">
-    <button class="nav-item active" onclick="switchScreen('screen-home')" id="nav-home">
+    <button class="nav-item" onclick="showToast('🏠 Retour accueil')">
       <div class="nav-icon">🏠</div>
       <div class="nav-label">Accueil</div>
     </button>
-    <button class="nav-item" onclick="switchScreen('screen-scan')" id="nav-scan">
+    <button class="nav-item" onclick="showToast('⬛ Scanner')">
       <div class="nav-icon">⬛</div>
       <div class="nav-label">Scanner</div>
     </button>
-    <button class="nav-item" onclick="switchScreen('screen-sav')" id="nav-sav">
+    <button class="nav-item" onclick="showToast('🔧 SAV')">
       <div class="nav-icon">🔧</div>
       <div class="nav-label">SAV</div>
     </button>
-    <button class="nav-item" onclick="switchScreen('screen-loop')" id="nav-loop">
+    <button class="nav-item" onclick="showToast('🌱 Loop')">
       <div class="nav-icon">🌱</div>
       <div class="nav-label">Loop</div>
     </button>
-    <button class="nav-item" onclick="switchScreen('screen-profile')" id="nav-profile">
-      <div class="nav-icon">👤</div>
-      <div class="nav-label">Profil</div>
+    <button class="nav-item active">
+      <div class="nav-icon">📍</div>
+      <div class="nav-label">Store Live</div>
     </button>
   </div>
 
-</div>
-</div>
+  <div class="toast" id="toast"></div>
+
+</div><!-- end phone -->
 
 <script>
-// ── SPLASH ──
-setTimeout(() => {
-  document.getElementById('splash').classList.add('hide');
-  setTimeout(() => document.getElementById('splash').style.display = 'none', 500);
-}, 2200);
+// ── CLOCK ──
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('livetime').textContent = h + ':' + m;
+}
+updateClock();
+setInterval(updateClock, 10000);
 
-// ── NAVIGATION ──
-function switchScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const map = {'screen-home':'nav-home','screen-scan':'nav-scan','screen-sav':'nav-sav','screen-loop':'nav-loop','screen-profile':'nav-profile'};
-  if (map[id]) document.getElementById(map[id]).classList.add('active');
+// ── CROWD BARS ──
+const hourlyData = [10, 18, 32, 55, 78, 65, 42, 68, 82, 90, 75, 45];
+const currentHour = new Date().getHours() - 9;
+const container = document.getElementById('crowd-bars');
+hourlyData.forEach((val, i) => {
+  const bar = document.createElement('div');
+  bar.className = 'crowd-bar ' + (i <= Math.max(currentHour, 0) ? 'active' : 'inactive');
+  const maxH = 60;
+  bar.style.height = Math.round((val / 100) * maxH) + 'px';
+  if (i === Math.max(currentHour, 0)) {
+    bar.style.background = 'var(--yellow)';
+    bar.style.boxShadow = '0 0 8px rgba(245,166,35,0.4)';
+  }
+  container.appendChild(bar);
+});
+
+// ── HEATMAP ──
+const heatVals = [0.1, 0.2, 0.35, 0.6, 0.85, 0.7, 0.45, 0.75, 0.9, 1.0, 0.8, 0.5];
+const colors = [
+  'rgba(46,204,113,0.2)', 'rgba(46,204,113,0.3)', 'rgba(245,166,35,0.2)',
+  'rgba(245,166,35,0.35)', 'rgba(245,166,35,0.55)', 'rgba(245,166,35,0.4)',
+  'rgba(231,76,60,0.2)', 'rgba(231,76,60,0.4)', 'rgba(231,76,60,0.6)',
+  'rgba(231,76,60,0.85)', 'rgba(231,76,60,0.5)', 'rgba(245,166,35,0.3)'
+];
+const hmap = document.getElementById('heatmap');
+heatVals.forEach((v, i) => {
+  const cell = document.createElement('div');
+  cell.className = 'hmap-cell';
+  cell.style.background = colors[i];
+  if (i === Math.max(currentHour, 0)) {
+    cell.style.outline = '2px solid var(--yellow)';
+    cell.style.outlineOffset = '1px';
+  }
+  hmap.appendChild(cell);
+});
+
+// ── STORE SELECT ──
+function selectStore(el, name) {
+  document.querySelectorAll('.store-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  showToast('📍 Magasin sélectionné : Fnac ' + name);
 }
 
-// ── MODALS ──
-function openProduct(id) {
-  const modal = document.getElementById('modal-' + id);
-  if (modal) modal.classList.add('active');
+// ── STOCK FILTER ──
+function filterStock(val) {
+  const items = document.querySelectorAll('.stock-item');
+  items.forEach(item => {
+    const name = item.querySelector('.stock-name').textContent.toLowerCase();
+    item.style.display = name.includes(val.toLowerCase()) ? 'flex' : 'none';
+  });
 }
-function closeModal(id) {
-  document.getElementById(id).classList.remove('active');
+
+// ── REFRESH ──
+function refreshData() {
+  const icon = document.getElementById('refresh-icon');
+  icon.style.animation = 'spin 0.6s linear';
+  const times = ['2 min', '4 min', '1 min', '3 min', '11 min', '9 min', '7 min', '5 min'];
+  const pick = () => times[Math.floor(Math.random() * times.length)];
+  setTimeout(() => {
+    document.getElementById('caisse-time').textContent = pick();
+    document.getElementById('sav-time').textContent = pick();
+    document.getElementById('retrait-time').textContent = pick();
+    document.getElementById('conseil-time').textContent = pick();
+    document.getElementById('crowd-count').textContent = Math.floor(Math.random() * 80 + 60);
+    icon.style.animation = '';
+    showToast('✓ Données actualisées — ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}));
+  }, 700);
 }
+
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }';
+document.head.appendChild(style);
 
 // ── TOAST ──
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
-  document.getElementById('toast-text').textContent = msg;
+  t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 }
-
-// ── SCAN SIMULATION ──
-function simulateScan() {
-  showToast('📷 Scan en cours... Passport trouvé !');
-  setTimeout(() => openProduct('iphone'), 1200);
-}
-
-// ── QR CODE GEN ──
-function generateQR(id, pattern) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const p = pattern || Array.from({length:49}, (_,i) => Math.random()>0.5 ? 1 : 0);
-  [0,1,2,3,4,5,6, 42,43,44,45,46,47,48, 7,14,21,28,35].forEach(i => p[i] = 1);
-  p.forEach(v => {
-    const c = document.createElement('div');
-    c.className = 'qr-cell ' + (v ? 'qr-on' : 'qr-off');
-    el.appendChild(c);
-  });
-}
-generateQR('qr1');
-generateQR('qr2');
-generateQR('qr3');
 </script>
+
 </body>
 </html>
